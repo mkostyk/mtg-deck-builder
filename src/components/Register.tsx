@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
-function Login() {
+function Register() {
     const [token, settoken] = useState(localStorage.getItem(localStorage.getItem("token") || "null"));
     const navigate = useNavigate();
 
-    const handleLogin = (event: any) => {
+    const handleRegister = (event: any) => {
         event.preventDefault()
-        fetch('http://localhost:8000/auth/login/', {
+        fetch('http://localhost:8000/auth/register/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -25,14 +25,16 @@ function Login() {
             response.json().then((data) => {
                 localStorage.setItem("token", data.token);
                 settoken(data.token);
+
                 navigate("/dashboard");
             });
         });
     }
-    
-    const loginForm = (
+
+
+    const registerForm = (
         <div className="login-form">
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleRegister}>
                 <div className="form-input-container">
                     <label htmlFor="username">Username: </label>
                     <input type="text" name="username" required/>
@@ -51,9 +53,10 @@ function Login() {
         </div>
     )
 
+
     return (
-        loginForm
+        registerForm
     );
 }
 
-export default Login;
+export default Register;

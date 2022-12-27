@@ -26,6 +26,7 @@ function Dashboard() {
                 console.log("Error") // TODO
                 return;
             }
+
             response.json().then((data) => {
                 setdisplayDeckList(true)!;
                 setDeckList({data: data});
@@ -41,12 +42,31 @@ function Dashboard() {
         }
     }
 
+    const logout = () => {
+        fetch('http://localhost:8000/auth/logout/', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem("token")
+            }
+        })
+        .then((response) => {
+            if (!response.ok) {
+                console.log("Error") // TODO
+                return;
+            }
+
+            localStorage.removeItem("token");
+            setauthenticated(false);
+        });
+    }
+
     const dashboardHTML = (
         <div>
             <h1>Dashboard</h1>
             <h2>You logged in succesfully!</h2>
             <h3>Your secret token is {localStorage.getItem("token")}</h3>
             <button onClick={getDeckList}>Get deck list</button>
+            <button onClick={logout}>Logout</button>
             {deckListHTML()}
         </div>
     )
