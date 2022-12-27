@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+    const [token, settoken] = useState(localStorage.getItem(localStorage.getItem("token")|| "0"));
+    const navigate = useNavigate();
 
     const handleLogin = (event: any) => {
-        console.log("Logged in")
+        console.log("Logged in") // TODO
         event.preventDefault()
         fetch('https://mtg-deck-builder-api-dev.herokuapp.com/auth/login/', {
             method: 'POST',
@@ -14,9 +17,21 @@ function Login() {
                 username: event.target.username.value,
                 password: event.target.password.value
             })
-        })
-    }
+        }).then((response) => {
+            if (!response.ok) {
+                console.log("Error") // TODO
+                return;
+            }
 
+            response.json().then((data) => {
+                localStorage.setItem("token", data.token);
+                settoken(data.token);
+                console.log(localStorage.getItem("token")); // TODO
+                navigate("/dashboard");
+            });
+        });
+    }
+    
     const loginForm = (
         <div className="login-form">
             <form onSubmit={handleLogin}>

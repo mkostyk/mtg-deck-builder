@@ -3,7 +3,9 @@ import Login from './components/Login';
 
 function App() {
   return (
-    <Login />
+    <div className="App">
+      This is homepage.
+    </div>
   );
 }
 
