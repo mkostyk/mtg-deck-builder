@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-    const [token, settoken] = useState(localStorage.getItem(localStorage.getItem("token")|| "0"));
+    const [token, settoken] = useState(localStorage.getItem(localStorage.getItem("token") || "null"));
     const navigate = useNavigate();
 
     const handleLogin = (event: any) => {
         console.log("Logged in") // TODO
         event.preventDefault()
-        fetch('https://mtg-deck-builder-api-dev.herokuapp.com/auth/login/', {
+        fetch('http://localhost:8000/auth/login/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
