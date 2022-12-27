@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from 'react';
 
+import React, { useState, useEffect } from 'react';
 import Decklist, { Decklist_t } from './Decklist';
 
 function Dashboard() {
     const [authenticated, setauthenticated] = useState(false);
     const [displayDeckList, setdisplayDeckList] = useState(false);
-    const [deckList, setDeckList] = useState({data: []} as Decklist_t);
+    const [deckList, setDeckList] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -32,14 +32,14 @@ function Dashboard() {
 
             response.json().then((data) => {
                 setdisplayDeckList(true)!;
-                setDeckList({data: data});
+                setDeckList(data);
             });
         });
     }
 
     const deckListHTML = () => {
         if (displayDeckList) {
-            return <Decklist {...deckList} />
+            return <Decklist data={deckList} />
         } else {
             return null
         }

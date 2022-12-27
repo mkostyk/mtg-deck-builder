@@ -6,6 +6,7 @@ import App from './components/App';
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Register from "./components/Register";
+import SearchResult from "./components/SearchResult";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -19,6 +20,7 @@ root.render(
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="searchResult" element={<SearchResult />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>
