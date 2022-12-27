@@ -1,10 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
+
 import Decklist, { Decklist_t } from './Decklist';
 
 function Dashboard() {
     const [authenticated, setauthenticated] = useState(false);
     const [displayDeckList, setdisplayDeckList] = useState(false);
     const [deckList, setDeckList] = useState({data: []} as Decklist_t);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem("token") || "null";
@@ -57,6 +60,7 @@ function Dashboard() {
 
             localStorage.removeItem("token");
             setauthenticated(false);
+            navigate("/login");
         });
     }
 
