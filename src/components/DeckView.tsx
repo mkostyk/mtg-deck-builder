@@ -1,7 +1,7 @@
-function EditDeck() {
+function DeckView() {
     return (
         <h1>This is deck editing page.</h1>
     );
 }
 
-export default EditDeck;
+export default DeckView;

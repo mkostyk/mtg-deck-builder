@@ -39,7 +39,7 @@ function Dashboard() {
 
     const deckListHTML = () => {
         if (displayDeckList) {
-            return <Decklist data={deckList} />
+            return <Decklist data={deckList} updateMethod={getDeckList}/>
         } else {
             return null
         }
@@ -64,6 +64,29 @@ function Dashboard() {
         });
     }
 
+    const createDeck = () => {
+        fetch('http://localhost:8000/decks/', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem("token"),
+            },
+
+            body: JSON.stringify({ // TODO - testing
+                name: "New deck",
+                description: "New deck description",
+                private: false
+            })
+        })
+        .then((response) => {
+            if (!response.ok) {
+                console.log("Error") // TODO
+                return;
+            }
+
+            getDeckList();
+        });
+    }
+
     const dashboardHTML = (
         <div>
             <h1>Dashboard</h1>
@@ -71,12 +94,13 @@ function Dashboard() {
             <h3>Your secret token is {localStorage.getItem("token")}</h3>
             <button onClick={getDeckList}>Get deck list</button>
             <button onClick={logout}>Logout</button>
+            <button onClick={createDeck}>Create new deck</button>
             {deckListHTML()}
         </div>
     )
 
     return (
-        authenticated ? dashboardHTML : <h1>Not authenticated</h1>
+        authenticated ? dashboardHTML : <h1>Not authenticated</h1> // TODO - redirect to login
     );
 }
 
