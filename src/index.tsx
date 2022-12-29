@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Register from "./components/Register";
 import SearchResult from "./components/SearchResult";
+import DeckView from "./components/DeckView";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -21,6 +22,7 @@ root.render(
           <Route path="register" element={<Register />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="searchResult" element={<SearchResult />} />
+          <Route path="deckView/:id" element={<DeckView />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>
