@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { isEmptyBindingElement } from "typescript";
+import Cardlist from "./Cardlist";
 
 function DeckView() {
     const id = useParams().id;
     const [cardList, setCardList] = useState([]);
 
     const getCardList = () => {
-        fetch('http://localhost:8000/cardsInDeck/?user_id=-1', {
+        fetch(`http://localhost:8000/cardsInDeck/?deck_id=${id}`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem("token")
@@ -28,7 +29,7 @@ function DeckView() {
 
     const cardListHTML = () => {
         if (cardList.length > 0) {
-            return <div>{cardList}</div>
+            return <Cardlist data={cardList}/>
         } else {
             return "This deck is empty"
         }

@@ -102,6 +102,7 @@ function Deck (props: Deck_t) {
         console.log("Deck clicked");
     }
 
+    // TODO - ten main button chyba jednak jest niefajny
     const deckHTML = (
         <Button onClick={deckClicked} sx={{ width: '100%' }}>
             <Paper elevation={3} sx={{ width: '100%' }}>
