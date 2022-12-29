@@ -19,12 +19,14 @@ function Deck (props: Deck_t) {
     const open = Boolean(anchorButtonMenu);
     const navigate = useNavigate();
 
-    const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-      setAnchorButtonMenu(event.currentTarget);
+    const handleOpen = (event: any) => {
+        event.stopPropagation();
+        setAnchorButtonMenu(event.currentTarget);
     };
 
-    const handleClose = () => {
-      setAnchorButtonMenu(null);
+    const handleClose = (event: any) => {
+        event.stopPropagation();
+        setAnchorButtonMenu(null);
     };
 
     const handleShowAlert = () => {
@@ -35,14 +37,15 @@ function Deck (props: Deck_t) {
         setShowAlert(false);
     };
 
-    const handleEdit = () => {
-        handleClose();
+    const handleEdit = (event: any) => {
+        console.log("Clicked");
+        handleClose(event);
         navigate(`/deckView/${props.id}`);
     };
 
-    const handleDelete = () => {
+    const handleDelete = (event: any) => {
         handleShowAlert();
-        handleClose();
+        handleClose(event);
     };
 
     const handleDeleteDeck = () => {
@@ -79,8 +82,8 @@ function Deck (props: Deck_t) {
             </DialogContent>
 
             <DialogActions>
-                <Button variant="contained" onClick={handleCloseAlert} autoFocus> No, save it for now </Button>
-                <Button variant="contained" color="error" onClick={handleDeleteDeck}> Yes, I want to delete it </Button>
+                <Button variant="contained" onClick={handleCloseAlert} autoFocus sx={{ marginLeft: '0.75rem' }}> No, save it for now </Button>
+                <Button variant="contained" color="error" onClick={handleDeleteDeck} sx={{ marginRight: '0.75rem' }}> Yes, I want to delete it </Button>
             </DialogActions>
       </Dialog>
     )
@@ -98,15 +101,56 @@ function Deck (props: Deck_t) {
         </Grid>
     )
 
-    const deckClicked = () => {
-        console.log("Deck clicked");
-    }
 
-    // TODO - ten main button chyba jednak jest niefajny
+    const menu = (
+        <Menu id={menu_id} anchorEl={anchorButtonMenu} open={open} onClose={handleClose} >
+            <MenuItem onClick={handleEdit}>
+                <ListItemIcon>
+                    <Edit fontSize="small" />
+                </ListItemIcon>
+
+                <ListItemText>
+                    Edit
+                </ListItemText>
+            </MenuItem>
+
+            <MenuItem onClick={handleDelete}>
+                <ListItemIcon>
+                    <Delete fontSize="small" />
+                </ListItemIcon>
+
+                <ListItemText>
+                    Delete
+                </ListItemText>
+            </MenuItem>
+        </Menu>
+    )
+
+    // This grid item in the middle is a bad workaround and probably not the best way to do this.
+    const footer = (
+        <Grid container justifyContent='flex-start'>
+            <Grid item>
+                <Typography variant="caption" sx={{ margin: '0.5rem', marginLeft: '0.75rem' }}>
+                    Author: TODO
+                </Typography>
+            </Grid>
+
+            <Grid item xs>
+            </Grid>
+
+            <Grid item>
+                <Typography variant="caption" sx={{ margin: '0.5rem', marginRight: '0.75rem' }}>
+                    Last updated: TODO
+                </Typography>
+            </Grid>
+        </Grid>
+        
+    )
+
     const deckHTML = (
-        <Button onClick={deckClicked} sx={{ width: '100%' }}>
+        <Button onClick={handleEdit} sx={{ width: '100%' }}>
             <Paper elevation={3} sx={{ width: '100%' }}>
-                <Grid container sx={{ alignItems: 'center' }}>
+                <Grid container sx={{ alignItems: 'center'}}>
                     <Grid item xs>
                         <Typography component="h1" variant="h5" sx={{ margin: '0.5rem' }}>
                             {props.name}
@@ -119,29 +163,13 @@ function Deck (props: Deck_t) {
                             <MoreVert />
                         </IconButton>
 
-                        <Menu id={menu_id} anchorEl={anchorButtonMenu} open={open} onClose={handleClose} >
-                            <MenuItem onClick={handleEdit}>
-                                <ListItemIcon>
-                                    <Edit fontSize="small" />
-                                </ListItemIcon>
+                        {menu}
+                    </Grid>
+                    <Grid item xs={12} height='1.5vw'>
 
-                                <ListItemText>
-                                    Edit
-                                </ListItemText>
-                            </MenuItem>
-
-                            <MenuItem onClick={handleDelete}>
-                                <ListItemIcon>
-                                    <Delete fontSize="small" />
-                                </ListItemIcon>
-
-                                <ListItemText>
-                                    Delete
-                                </ListItemText>
-                            </MenuItem>
-                        </Menu>
                     </Grid>
                 </Grid>
+                {footer}
             </Paper>
         </Button>
     )
