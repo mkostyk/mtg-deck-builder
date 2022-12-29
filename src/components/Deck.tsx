@@ -19,12 +19,14 @@ function Deck (props: Deck_t) {
     const open = Boolean(anchorButtonMenu);
     const navigate = useNavigate();
 
-    const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-      setAnchorButtonMenu(event.currentTarget);
+    const handleOpen = (event: any) => {
+        event.stopPropagation();
+        setAnchorButtonMenu(event.currentTarget);
     };
 
-    const handleClose = () => {
-      setAnchorButtonMenu(null);
+    const handleClose = (event: any) => {
+        event.stopPropagation();
+        setAnchorButtonMenu(null);
     };
 
     const handleShowAlert = () => {
@@ -35,14 +37,15 @@ function Deck (props: Deck_t) {
         setShowAlert(false);
     };
 
-    const handleEdit = () => {
-        handleClose();
+    const handleEdit = (event: any) => {
+        console.log("Clicked");
+        handleClose(event);
         navigate(`/deckView/${props.id}`);
     };
 
-    const handleDelete = () => {
+    const handleDelete = (event: any) => {
         handleShowAlert();
-        handleClose();
+        handleClose(event);
     };
 
     const handleDeleteDeck = () => {
@@ -79,8 +82,8 @@ function Deck (props: Deck_t) {
             </DialogContent>
 
             <DialogActions>
-                <Button variant="contained" onClick={handleCloseAlert} autoFocus> No, save it for now </Button>
-                <Button variant="contained" color="error" onClick={handleDeleteDeck}> Yes, I want to delete it </Button>
+                <Button variant="contained" onClick={handleCloseAlert} autoFocus sx={{ marginLeft: '0.75rem' }}> No, save it for now </Button>
+                <Button variant="contained" color="error" onClick={handleDeleteDeck} sx={{ marginRight: '0.75rem' }}> Yes, I want to delete it </Button>
             </DialogActions>
       </Dialog>
     )
@@ -98,13 +101,8 @@ function Deck (props: Deck_t) {
         </Grid>
     )
 
-    const deckClicked = () => {
-        console.log("Deck clicked");
-    }
-
-    // TODO - ten main button chyba jednak jest niefajny
     const deckHTML = (
-        <Button onClick={deckClicked} sx={{ width: '100%' }}>
+        <Button onClick={handleEdit} sx={{ width: '100%' }}>
             <Paper elevation={3} sx={{ width: '100%' }}>
                 <Grid container sx={{ alignItems: 'center' }}>
                     <Grid item xs>
