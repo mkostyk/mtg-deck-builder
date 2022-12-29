@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 import { Grid, IconButton, Typography, Menu, MenuItem, ListItemIcon, ListItemText,
          Paper, Button, Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
@@ -16,6 +17,7 @@ function Deck (props: Deck_t) {
     const [showAlert, setShowAlert] = useState(false);
 
     const open = Boolean(anchorButtonMenu);
+    const navigate = useNavigate();
 
     const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
       setAnchorButtonMenu(event.currentTarget);
@@ -34,8 +36,8 @@ function Deck (props: Deck_t) {
     };
 
     const handleEdit = () => {
-        console.log("Edit");
         handleClose();
+        navigate(`/deckView/${props.id}`);
     };
 
     const handleDelete = () => {
