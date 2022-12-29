@@ -30,8 +30,6 @@ function DeckView() {
     const cardListHTML = () => {
         if (cardList.length > 0) {
             return <Cardlist data={cardList}/>
-        } else {
-            return "This deck is empty"
         }
     }
 
