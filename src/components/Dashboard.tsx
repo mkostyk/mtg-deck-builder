@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
 import Decklist, { Decklist_t } from './Decklist';
 
+import { Grid, Typography, Fab, Dialog, DialogContent, DialogTitle, DialogContentText, Button, DialogActions, TextField, FormControlLabel, Checkbox } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+
 function Dashboard() {
     const [authenticated, setauthenticated] = useState(false);
     const [displayDeckList, setdisplayDeckList] = useState(false);
@@ -31,7 +34,7 @@ function Dashboard() {
             }
 
             response.json().then((data) => {
-                setdisplayDeckList(true)!;
+                setdisplayDeckList(true);
                 setDeckList(data);
             });
         });
@@ -41,6 +44,7 @@ function Dashboard() {
         if (displayDeckList) {
             return <Decklist data={deckList} updateMethod={getDeckList}/>
         } else {
+            getDeckList();
             return null
         }
     }
@@ -64,7 +68,10 @@ function Dashboard() {
         });
     }
 
-    const createDeck = () => {
+    const createDeck = (event: any) => {
+        console.log(event);
+        event.preventDefault();
+        handleCloseForm();
         fetch('http://localhost:8000/decks/', {
             method: 'POST',
             headers: {
@@ -72,9 +79,8 @@ function Dashboard() {
             },
 
             body: JSON.stringify({ // TODO - testing
-                name: "New deck",
-                description: "New deck description",
-                private: false
+                name: event.target.name.value,
+                private: privateDeck,
             })
         })
         .then((response) => {
@@ -83,20 +89,64 @@ function Dashboard() {
                 return;
             }
 
-            getDeckList();
+            response.json().then((data) => {
+                navigate(`/deckView/${data.id}`);
+            });
         });
     }
 
+    const [showForm, setShowForm] = useState(false);
+    const [privateDeck, setPrivateDeck] = useState(false);
+
+    const handleOpenForm = () => setShowForm(true);
+    const handleCloseForm = () => setShowForm(false);
+    const changePrivacyCheckbox = (event: any) => setPrivateDeck(event.target.checked);
+
+    const newDeckForm = (
+        <Dialog open={showForm} onClose={handleCloseForm}>
+            <DialogTitle id="create-dialog">
+                Create a new deck
+            </DialogTitle>
+
+            <DialogContent>
+                <form id="create-deck-form" onSubmit={createDeck} >
+                    <TextField id="deck-name-input" name="name" label="Deck name" type="text" fullWidth required sx={{ marginTop: '0.5rem' }} />
+                    <FormControlLabel
+                        control={<Checkbox value="private" color="primary" onChange={changePrivacyCheckbox}/>}
+                        label="Private"
+                    />
+                </form>
+            </DialogContent>
+
+            <DialogActions>
+                <Button variant="contained" color="success" type="submit" form="create-deck-form"> Create </Button>
+                <Button variant="contained" color="error" onClick={handleCloseForm} autoFocus> Cancel </Button>
+            </DialogActions>
+      </Dialog>
+    )
+
     const dashboardHTML = (
-        <div>
-            <h1>Dashboard</h1>
-            <h2>You logged in succesfully!</h2>
-            <h3>Your secret token is {localStorage.getItem("token")}</h3>
-            <button onClick={getDeckList}>Get deck list</button>
-            <button onClick={logout}>Logout</button>
-            <button onClick={createDeck}>Create new deck</button>
-            {deckListHTML()}
-        </div>
+        <Grid container alignItems="center" justifyContent="center">
+            <Grid item xs={0}>
+                <Typography variant="h2">
+                    Dashboard
+                </Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+                <button onClick={logout}>Logout</button>
+            </Grid>
+
+            <Grid item xs={12}>
+                {deckListHTML()}
+            </Grid>
+
+            <Fab color="primary" sx = {{ position: "fixed", right: "min(4rem, 10vw)", bottom: "min(4rem, 10vw)", padding: "2.5rem" }} onClick={handleOpenForm}>
+                <AddIcon fontSize="large"/>
+            </Fab>
+
+            {newDeckForm}
+        </Grid>
     )
 
     return (
