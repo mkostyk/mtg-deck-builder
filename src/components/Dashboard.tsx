@@ -6,6 +6,8 @@ import Decklist, { Decklist_t } from './Decklist';
 import { Grid, Typography, Fab, Dialog, DialogContent, DialogTitle, DialogContentText, Button, DialogActions, TextField, FormControlLabel, Checkbox } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
+import { requestPath } from "../utils";
+
 function Dashboard() {
     const [authenticated, setauthenticated] = useState(false);
     const [displayDeckList, setdisplayDeckList] = useState(false);
@@ -20,7 +22,7 @@ function Dashboard() {
     }, []);
 
     const getDeckList = () => {
-        fetch('http://localhost:8000/decks/?user_id=-1', {
+        fetch(`${requestPath}/decks/?user_id=-1`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem("token")
@@ -50,7 +52,7 @@ function Dashboard() {
     }
 
     const logout = () => {
-        fetch('http://localhost:8000/auth/logout/', {
+        fetch(`${requestPath}/auth/logout/`, {
             method: 'POST',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem("token")
@@ -72,7 +74,7 @@ function Dashboard() {
         console.log(event);
         event.preventDefault();
         handleCloseForm();
-        fetch('http://localhost:8000/decks/', {
+        fetch(`${requestPath}/decks/`, {
             method: 'POST',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem("token"),

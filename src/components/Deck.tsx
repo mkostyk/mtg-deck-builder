@@ -5,6 +5,8 @@ import { Grid, IconButton, Typography, Menu, MenuItem, ListItemIcon, ListItemTex
          Paper, Button, Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
 import { MoreVert, Edit, Delete, Public, Lock } from '@mui/icons-material';
 
+import { requestPath } from "../utils";
+
 export interface Deck_t {
     id: number;
     name: string;
@@ -50,7 +52,7 @@ function Deck (props: Deck_t) {
 
     const handleDeleteDeck = () => {
         handleCloseAlert();
-        fetch(`http://localhost:8000/decks/?id=${props.id}`, {
+        fetch(`${requestPath}/decks/?id=${props.id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem("token"),

@@ -5,6 +5,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LockPerson } from '@mui/icons-material';
 import { Box, TextField, Typography, Button, CssBaseline, Input, Grid, Link, Container } from '@mui/material';
 
+import { requestPath } from "../utils";
+
 
 function Login() {
     const [token, settoken] = useState(localStorage.getItem(localStorage.getItem("token") || "null"));
@@ -12,7 +14,7 @@ function Login() {
 
     const handleLogin = (event: any) => {
         event.preventDefault()
-        fetch('http://localhost:8000/auth/login/', {
+        fetch(`${requestPath}/auth/login/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

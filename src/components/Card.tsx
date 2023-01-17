@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Paper } from "@mui/material";
+import { requestPath } from "../utils";
 
 export interface Card_t {
     id: number;
+    card_id: number;
 }
 
 function DeckView(props: Card_t) {
@@ -11,7 +13,7 @@ function DeckView(props: Card_t) {
     const [loaded, setLoaded] = useState(false);
 
     const fetchImage = (id: number) => {
-        fetch(`http://localhost:8000/images/?id=${id}`, {
+        fetch(`${requestPath}/images/?id=${id}`, {
             method: 'GET',
         }).then((response) => {
             if (!response.ok) {
@@ -27,7 +29,7 @@ function DeckView(props: Card_t) {
     }
 
     const fetchCard = (id: number) => {
-        fetch(`http://localhost:8000/cards/?id=${id}`, {
+        fetch(`${requestPath}/cards/?id=${id}`, {
             method: 'GET',
         }).then((response) => {
             if (!response.ok) {
@@ -45,7 +47,7 @@ function DeckView(props: Card_t) {
     const cardHTML = () => {
         // We have to wait until card has fetched its info from API before we can display it.
         if (!loaded) {
-            fetchCard(props.id);
+            fetchCard(props.card_id);
             return <h3></h3>
         } else {
             return (

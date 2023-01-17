@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Box, Typography, TextField, Input, CssBaseline, Container, InputAdornment, IconButton, Grid } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { requestPath } from "../utils";
 
 function App() {
     const navigate = useNavigate();
@@ -10,7 +11,7 @@ function App() {
     const handleSearchDecks = (event: any) => {
         event.preventDefault();
 
-        fetch(`http://localhost:8000/decks/?name=${event.target.search.value}`, {
+        fetch(`${requestPath}/decks/?name=${event.target.search.value}`, {
             method: 'GET' // TODO - auth header if there is a token in localStorage
         }).then((response) => {
             if (!response.ok) {

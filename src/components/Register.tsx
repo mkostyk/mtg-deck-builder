@@ -5,13 +5,15 @@ import { AccountCircle } from '@mui/icons-material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Box, Button, Input, TextField, Typography, CssBaseline, Container, Grid, Link } from '@mui/material';
 
+import { requestPath } from "../utils";
+
 function Register() {
     const [token, settoken] = useState(localStorage.getItem(localStorage.getItem("token") || "null"));
     const navigate = useNavigate();
 
     const handleRegister = (event: any) => {
         event.preventDefault()
-        fetch('http://localhost:8000/auth/register/', {
+        fetch(`${requestPath}/auth/register/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

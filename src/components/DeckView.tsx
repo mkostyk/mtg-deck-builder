@@ -3,12 +3,14 @@ import { useParams } from "react-router-dom";
 import { isEmptyBindingElement } from "typescript";
 import Cardlist from "./Cardlist";
 
+import { requestPath } from "../utils";
+
 function DeckView() {
     const id = useParams().id;
     const [cardList, setCardList] = useState([]);
 
     const getCardList = () => {
-        fetch(`http://localhost:8000/cardsInDeck/?deck_id=${id}`, {
+        fetch(`${requestPath}/cardsInDeck/?deck_id=${id}`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem("token")
