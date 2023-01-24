@@ -1,14 +1,14 @@
 import Decklist from "./Decklist";
 
-function SearchResult() {
-    const searchResultHTML = () => {
+function DeckSearchResult() {
+    const deckSearchResultHTML = () => {
         const decks = JSON.parse(localStorage.getItem("decks") || "null");
         return <Decklist data={decks} updateMethod={null}/>
     }
 
     return (
-        searchResultHTML()
+        deckSearchResultHTML()
     );
 }
 
-export default SearchResult;
+export default DeckSearchResult;

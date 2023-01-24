@@ -4,6 +4,18 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Box, Typography, TextField, Input, CssBaseline, Container, InputAdornment, IconButton, Grid } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { requestPath } from "../utils";
+import NavBar from "./NavBar";
+import { CardSearch } from './CardSearch';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./Login";
+import Dashboard from "./Dashboard";
+import Register from "./Register";
+import DeckSearchResult from "./DeckSearchResult";
+import CardSearchResult from "./CardSearchResult";
+import DeckView from "./DeckView";
+import CardView from "./CardView";
+import { DeckSearch } from "./DeckSearch";
+import { UserDecks } from './UserDecks';
 
 function App() {
     const navigate = useNavigate();
@@ -21,7 +33,6 @@ function App() {
 
             response.json().then((data) => {
                 localStorage.setItem("decks", JSON.stringify(data));
-                navigate('/searchResult')
             });
         });
     }
@@ -54,9 +65,19 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <Container component="main" maxWidth="xs">
-                {searchField}
-            </Container>
+            <NavBar />
+            <Routes>
+                 <Route path="login" element={<Login />} />
+                <Route path="register" element={<Register />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="deckSearchResult" element={<DeckSearchResult />} />
+                <Route path="deckView/:id" element={<DeckView />} />
+                <Route path="cardSearch" element={<CardSearch />} />
+                <Route path="cardSearchResult" element={<CardSearchResult />} />
+                <Route path="cardView" element={<CardView />} />
+                <Route path="deckSearch" element={<DeckSearch />} />
+                <Route path="userDecks" element={<UserDecks />} />
+            </Routes>
         </ThemeProvider>
     );
 }
