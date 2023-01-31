@@ -55,7 +55,7 @@ function SingleCardResult(props: Card_t) {
         <Button onClick={handleClickCard(props.id, navigate)}>
        <Grid container spacing={2}>
         <Grid item>
-        <img src={`${image}`}/>
+            <img src={`${image}`}/>
         </Grid>
         <Grid item>
         <Grid item>
@@ -85,7 +85,7 @@ function CardSearchResult() {
             <Box>
                 <Stack spacing={2}>
                     {cards.map((card: any) => (
-                        <SingleCardResult id={card.id} cardName={card.cardName} manaCost={card.manaCost} cardText={card.cardText} typeLine={card.typeLine} imageURL={card.imageURL} />
+                        <SingleCardResult id={card.id} cardName={card.cardName} manaCost={card.manaCost} cardText={card.cardText} typeLine={card.typeLine} imageURL={card.imageURL.small} />
                     ))}
                 </Stack>
                 

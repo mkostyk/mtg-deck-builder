@@ -5,22 +5,24 @@ import Cardlist from "./Cardlist";
 import React, {useEffect} from "react";
 
 import { requestPath } from "../utils";
-import { Typography, Button, Paper, IconButton, Dialog } from '@mui/material';
+import { Typography, Button, Paper, IconButton, Dialog, Autocomplete, TextField } from '@mui/material';
 
 import ClearIcon from '@mui/icons-material/Clear';
 import CardDialog from "./CardDialog";
 import { DialogInterface } from "./CardDialog";
+import cardNames from "../assets/card_names-1.json"
 
 function DeckView() {
-    const id = useParams().id;
+    const deckId = useParams().id;
     const [cardList, setCardList] = useState<any[]>([]);
+    const [cardListWithCount, setCardListWithCount] = useState<any[]>([]);
 
     useEffect(() => {
         getCardList()
     }, [])
 
     const getCardList = async () => {
-        const response = await fetch(`${requestPath}/cardsInDeck/?deck_id=${id}`, {
+        const response = await fetch(`${requestPath}/cardsInDeck/?deck_id=${deckId}`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem("token")
@@ -43,16 +45,19 @@ function DeckView() {
             });
             const cardLikeIdJson = await cardLikeId.json();
             console.log(cardLikeIdJson);
-            const gowno2 = {...cardLikeIdJson[0]};
+            const gowno2 = {...cardLikeIdJson[0], deleteId: card.id};
             console.log(gowno2)
             return gowno2;
         }))
 
         console.log(cardDataFull);
         setCardList(cardDataFull);
+
+        compressWithCount(cardDataFull)
     }
 
     const stringManaToArray = (manaString: []) => {
+        console.log(manaString)
         let res = {cost: "", mana: []};
         for (let i = 0; i < manaString.length; ++i) {
             if (manaString[i] !== '{' && manaString[i] !== '}') {
@@ -68,12 +73,68 @@ function DeckView() {
         return res;
     }
 
+    const compressWithCount = (cards: any) => {
+        const cardListIds = cards.map((card: any) => (card.id));
+        console.log(cardListIds)
+        const cardListIdsNoDuplicates = cardListIds.filter((cardId: any, index: any) => {
+            return cardListIds.indexOf(cardId) === index
+        });
+
+        console.log(cardListIdsNoDuplicates)
+
+        const cardListWithCount = cardListIdsNoDuplicates.map((cardId: any) => (
+            {
+                ...cards.find((card: any) => card.id === cardId),
+                count: cards.filter((origCard: any) => origCard.id === cardId).length
+            }
+        ))
+
+        console.log(cardListWithCount)
+        setCardListWithCount(cardListWithCount)
+    }
+
     const [openDialog, setOpenDialog] = useState(false);
     const [dialogCard, setDialogCard] = useState(-1);
 
     const handleShowDetailButton = (cardId: any) => {
         setOpenDialog(true);
         setDialogCard(cardId);
+    }
+
+    const [autocompleteInputValue, setAutocompleteInputValue] = useState("");
+
+    const handleAutocompleteValueChange = async (newValue: any) => {
+        console.log(newValue)
+
+        if (newValue) {
+            console.log("hej")
+            const res = await fetch(`${requestPath}/cardsInDeck/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + localStorage.getItem("token")
+                },
+                body: JSON.stringify({
+                    deck_id: deckId,
+                    card_id: newValue.id
+                })
+            })
+
+            console.log(await res.json())
+            getCardList();
+        }
+    }
+
+    const handleDeleteCard = async (card: any) => {
+        console.log(card)
+        await fetch(`${requestPath}/cardsInDeck/?id=${card.deleteId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem("token"),
+            }     
+        })
+
+        getCardList()
     }
 
     return (
@@ -84,13 +145,30 @@ function DeckView() {
                 card = {dialogCard}
             />
             <div style = {{display: "flex", flexDirection: "column", justifyItems: "center", alignItems: "center"}}>
-                <Typography variant="h3" sx = {{padding: 3}}>This is deck editing page</Typography>
-                <Typography variant="h4">Deck id: {id}</Typography>
+                <Typography variant="h3" sx = {{padding: 5}}>Edit this deck!</Typography>
+                {/*<Typography variant="h4">Deck id: {id}</Typography>*/}
             </div>
+            <Autocomplete
+                sx = {{paddingLeft: 10, paddingRight: 10}}
+                renderInput={(params) => <TextField {...params} label = "Search for new cards" /*inputProps = {{style: {fontSize: 20}}}*/ InputLabelProps = {{style: {fontSize: 20}}}/>}
+                options = {
+                    cardNames.filter(card => card.name.includes(autocompleteInputValue))
+                             .map(card => ({label: card.name, id: card.id})).slice(0, 10)}
+                onInputChange = {(event, newInputValue) => {
+                    setAutocompleteInputValue(newInputValue)
+                }}
+                onChange = {(event, newValue) => handleAutocompleteValueChange(newValue)}
+            />
             <div style = {{padding: 25}}>
-                {cardList.map((card, key) => (
-                    <Paper sx = {{padding: 3, margin: 5, borderRadius: 1000, fontSize: 20, backgroundColor: "lightgrey", display: "flex"}} key = {key}>
-                        <IconButton sx = {{height: 32, width: 32, marginRight: 2}}>
+                {cardListWithCount.map((card, key) => (
+                    <Paper
+                        sx = {{padding: 3, margin: 5, borderRadius: 1000, fontSize: 20, backgroundColor: "lightgrey", display: "flex"}}
+                        key = {key}
+                    >
+                        <IconButton
+                            sx = {{height: 32, width: 32, marginRight: 2}}
+                            onClick = {() => handleDeleteCard(card)}
+                        >
                             <ClearIcon/>
                         </IconButton>
                         <div style = {{display: "flex", flexGrow: 1}}>
@@ -114,7 +192,9 @@ function DeckView() {
                                 ))}
                             </div>
                         </div>
-                                    
+                        <IconButton sx = {{width: 32, height: 32, marginRight: 2}}>
+                            {card.count}
+                        </IconButton>      
                         <Button variant = "contained" onClick = {() => handleShowDetailButton(card.id)}>
                             Click for details
                         </Button>
