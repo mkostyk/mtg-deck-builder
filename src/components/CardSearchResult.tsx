@@ -56,7 +56,7 @@ function SingleCardResult(props: Card_t) {
         <Button onClick={handleClickCard(props.id, navigate)}>
        <Grid container spacing={2}>
         <Grid item>
-        <img src={`${image}`}/>
+            <img src={`${image}`}/>
         </Grid>
         <Grid item>
         <Grid item>

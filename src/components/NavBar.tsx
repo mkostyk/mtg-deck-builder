@@ -98,7 +98,7 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static" sx = {{width: "100%"}}>
+    <AppBar position="static" sx = {{width: "100%", marginTop: -3}}>
       <Container sx = {{minWidth: "100%"}}>
         <Toolbar disableGutters>
             <AdbIcon sx={{ display: "flex", mr: 1 }} />
