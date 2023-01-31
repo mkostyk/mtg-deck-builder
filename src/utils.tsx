@@ -1,1 +1,1 @@
-export const requestPath = "http://192.168.0.11:8000/";
+export const requestPath = "http://mtg-deck-builder-api.herokuapp.com";

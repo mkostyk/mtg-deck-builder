@@ -40,6 +40,9 @@ export function CardSearch() {
         }))
         //todo - localstorage
         console.log(cardData);
+        localStorage.setItem("cards", JSON.stringify(cardData));
+        navigate("../cardSearchResult");
+
     }
 
     function searchField() {
