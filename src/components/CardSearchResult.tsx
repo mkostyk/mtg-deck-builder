@@ -50,6 +50,7 @@ function SingleCardResult(props: Card_t) {
     const manaCost = props.manaCost;
     const navigate = useNavigate();   
     console.log(props.id); 
+    console.log(image);
 
     return ( <Box>
         <Button onClick={handleClickCard(props.id, navigate)}>
@@ -78,14 +79,14 @@ function SingleCardResult(props: Card_t) {
 
 function CardSearchResult() {
     const searchResultHTML = () => {
-        const cards = JSON.parse(JSON.stringify(localStorage.getItem("cards")) || "null");
+        const cards = JSON.parse(localStorage.getItem("cards") || "null");
         console.log(cards);
 
         return (
             <Box>
                 <Stack spacing={2}>
                     {cards.map((card: any) => (
-                        <SingleCardResult id={card.id} cardName={card.cardName} manaCost={card.manaCost} cardText={card.cardText} typeLine={card.typeLine} imageURL={card.imageURL} />
+                        <SingleCardResult id={card.id} cardName={card.cardName} manaCost={card.manaCost} cardText={card.cardText} typeLine={card.typeLine} imageURL={card.imageURL.small} />
                     ))}
                 </Stack>
                 
