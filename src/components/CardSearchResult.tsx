@@ -19,79 +19,48 @@ export interface Card_t {
     imageURL: string;
 }
 
-function handleClickCard(id:number, nav: any){
-    return ((event: any) =>
-    {
-        console.log(id);
-        
-        fetch(`${requestPath}/cards/?id=${id}`, {
-            method: 'GET' // TODO - auth header if there is a token in localStorage
-        }).then((response) => {
-            if (!response.ok) {
-                console.log("Error") // TODO
-                return;
-            }
+function handleClickCard(id:number, nav: any) {
+    console.log(id);
+    
+    fetch(`${requestPath}/cards/?id=${id}`, {
+        method: 'GET' // TODO - auth header if there is a token in localStorage
+    }).then((response) => {
+        if (!response.ok) {
+            console.log("Error") // TODO
+            return;
+        }
 
-            response.json().then((data) => {
-                console.log(JSON.stringify(data));
-                localStorage.setItem("card", JSON.stringify(data));
-                nav('/cardView');
-            });
+        response.json().then((data) => {
+            console.log(JSON.stringify(data));
+            localStorage.setItem("card", JSON.stringify(data));
+            nav('/cardView');
         });
-    })
-        
-}
-
-function SingleCardResult(props: Card_t) {
-    const image = props.imageURL;
-    const cardName = props.cardName;
-    const typeLine = props.typeLine;
-    const cardText = props.cardText;
-    const manaCost = props.manaCost;
-    const navigate = useNavigate();   
-    console.log(props.id); 
-    console.log(image);
-
-    return ( <Box>
-        <Button onClick={handleClickCard(props.id, navigate)}>
-       <Grid container spacing={2}>
-        <Grid item>
-            <img src={`${image}`}/>
-        </Grid>
-        <Grid item>
-        <Grid item>
-            {cardName}
-        </Grid>
-        <Grid item>
-            {manaCost}
-        </Grid>
-        <Grid item>
-            {typeLine}
-        </Grid>
-        <Grid item>
-            {cardText}
-        </Grid>
-        </Grid>
-      </Grid>
-      </Button>
-    </Box>);
+    });
 }
 
 function CardSearchResult() {
+    const navigate = useNavigate();
+
     const searchResultHTML = () => {
-        const cards = JSON.parse(localStorage.getItem("cards") || "null");
+        const cards = JSON.parse(localStorage.getItem("cards") as string);
         console.log(cards);
 
         return (
-            <Box>
-                <Stack spacing={2}>
+            <div>
+                <Typography variant = "h4" sx = {{paddingTop: 6, paddingBottom: 2, width: "100vw", display: "flex", justifyContent: "center"}}>
+                    Search results
+                </Typography>
+                <div style = {{display: "flex", flexWrap: "wrap", padding: 20, width: "100vw", justifyContent: "center"}}>
                     {cards.map((card: any) => (
-                        <SingleCardResult id={card.id} cardName={card.cardName} manaCost={card.manaCost} cardText={card.cardText} typeLine={card.typeLine} imageURL={card.imageURL.small} />
+                        <img
+                            src = {`${card.imageURL.normal}`}
+                            style = {{height: 400, padding: 10}}
+                            onClick = {() => handleClickCard(card.id, navigate)}
+                        />
                     ))}
-                </Stack>
-                
-            </Box>
-            )
+                </div>
+            </div>
+        )
     }
     return (
         searchResultHTML()
