@@ -15,21 +15,21 @@ export function CardSearch() {
     const navigate = useNavigate();
 
     // TODO - całe do wypierdolenia
-    const handleSearchCards = async (event: any) => {
-        event.preventDefault();
+    const handleSearchCards = async () => {
+        //event.preventDefault();
 
-        console.log(cardname);
+        /*console.log(cardname);
         console.log(chosenFormat);
         console.log(chosenTypes);
         console.log(chosenColors);
-        console.log(chosenSubtype);
+        console.log(chosenSubtype);*/
 
-        /*const cardsLikeInfix = await fetch(`${requestPath}/cards/?name=${event.target.search.value}`, {
+        const cardsLikeInfix = await fetch(`${requestPath}/cards/?name=${cardname}`, {
             method: 'GET' // TODO - auth header if there is a token in localStorage
         });
 
         if(!cardsLikeInfix.ok) {
-            console.log("Error") // TODO
+            console.log("Error tutaj") // TODO
             return;
         }
         const cardsLikeInfixJson = await cardsLikeInfix.json();
@@ -49,7 +49,7 @@ export function CardSearch() {
         }))
         
         localStorage.setItem("cards", JSON.stringify(cardData));
-        navigate("../cardSearchResult");*/
+        navigate("../cardSearchResult");
     }
 
     const cardTypeOptions = [
