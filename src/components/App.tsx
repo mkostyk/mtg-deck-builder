@@ -16,6 +16,8 @@ import DeckView from "./DeckView";
 import CardView from "./CardView";
 import { DeckSearch } from "./DeckSearch";
 import { UserDecks } from './UserDecks';
+import { LoginContext } from "./LoginContext";
+import { useState, useEffect } from "react";
 
 function App() {
     const navigate = useNavigate();
@@ -61,24 +63,47 @@ function App() {
     )
 
     const theme = createTheme(); // TODO - custom theme
+    const [login, setLogin] = useState(false);
+
+    const checkLogin = async() => {
+        const token = localStorage.getItem("token");
+
+        const userId = await fetch(`${requestPath}/token/?token=${token}`, {
+            method: 'GET'
+        })
+
+        if(!userId.ok) {
+            return;
+        }
+
+        const userIdJson = await userId.json();
+
+        setLogin(userIdJson.user_id);
+    }
+
+    useEffect(()=>{
+        checkLogin();
+    }, []);
 
     return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <NavBar />
-            <Routes>
-                 <Route path="login" element={<Login />} />
-                <Route path="register" element={<Register />} />
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="deckSearchResult" element={<DeckSearchResult />} />
-                <Route path="deckView/:id" element={<DeckView />} />
-                <Route path="cardSearch" element={<CardSearch />} />
-                <Route path="cardSearchResult" element={<CardSearchResult />} />
-                <Route path="cardView" element={<CardView />} />
-                <Route path="deckSearch" element={<DeckSearch />} />
-                <Route path="userDecks" element={<UserDecks />} />
-            </Routes>
-        </ThemeProvider>
+        <LoginContext.Provider value={{login, setLogin}}>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <NavBar />
+                <Routes>
+                    <Route path="login" element={<Login />} />
+                    <Route path="register" element={<Register />} />
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="deckSearchResult" element={<DeckSearchResult />} />
+                    <Route path="deckView/:id" element={<DeckView />} />
+                    <Route path="cardSearch" element={<CardSearch />} />
+                    <Route path="cardSearchResult" element={<CardSearchResult />} />
+                    <Route path="cardView" element={<CardView />} />
+                    <Route path="deckSearch" element={<DeckSearch />} />
+                    <Route path="userDecks" element={<UserDecks />} />
+                </Routes>
+            </ThemeProvider>
+        </LoginContext.Provider>
     );
 }
 

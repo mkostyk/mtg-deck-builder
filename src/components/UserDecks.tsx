@@ -37,6 +37,7 @@ export function UserDecks() {
 
     useEffect(()=>{
         getDecks();
+        console.log(localStorage.getItem("token"));
     }, []);
 
     return (

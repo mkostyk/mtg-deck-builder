@@ -52,6 +52,7 @@ function Dashboard() {
     }
 
     const logout = () => {
+        //TODO - KURWA MICHAAAAAŁ
         fetch(`${requestPath}/auth/logout/`, {
             method: 'POST',
             headers: {
