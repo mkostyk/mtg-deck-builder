@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { isEmptyBindingElement } from "typescript";
 import Cardlist from "./Cardlist";
-import React, {useEffect} from "react";
+import React, {useEffect, useContext} from "react";
 
 import { requestPath } from "../utils";
 import { Typography, Button, Paper, IconButton, Dialog, Autocomplete, TextField } from '@mui/material';
@@ -11,14 +11,77 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CardDialog from "./CardDialog";
 import { DialogInterface } from "./CardDialog";
 import cardNames from "../assets/card_names-1.json"
+import { LoginContext } from './LoginContext';
+
+export interface Deck_t {
+    id: number;
+    author: number;
+}
 
 function DeckView() {
     const deckId = useParams().id;
     const [cardList, setCardList] = useState<any[]>([]);
     const [cardListWithCount, setCardListWithCount] = useState<any[]>([]);
+    const { login } = useContext(LoginContext);
+    const [isMine, setIsMine] = useState<boolean>(false);
+    const [deck, setDeck] = useState<Deck_t>();
 
     useEffect(() => {
-        getCardList()
+        getDeck();
+    }, [login])
+
+    const getDeck = async () => {
+        const token = localStorage.getItem("token");
+        let deckRequest: any;
+        
+        console.log(token);
+
+        if(token != null) {
+            deckRequest = await fetch(`${requestPath}/decks/?id=${deckId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + localStorage.getItem("token")
+                }
+            });
+        } else {
+            deckRequest = await fetch(`${requestPath}/decks/?id=${deckId}`, {
+                method: 'GET'
+            });
+        }
+
+        if(!deckRequest.ok){
+            setDeck({id: -1, author: -1});
+            return;
+        }
+
+        const deckRequestJson = await deckRequest.json();
+
+        console.log(deckRequestJson);
+
+        setDeck({id: deckRequestJson[0].id, author: deckRequestJson[0].author});
+
+        checkIfMine(deckRequestJson[0].author);
+    }
+
+    const checkIfMine =  async (author: any) => {
+        const myId = await fetch(`${requestPath}/token/?token=${localStorage.getItem("token")}`, {
+            method: 'GET'
+        });
+
+        if (!myId.ok) {
+            setIsMine(false);
+        }
+
+        const myIdJson = await myId.json();
+
+        console.log(myIdJson.user_id);
+        console.log(author);
+
+        setIsMine(myIdJson.user_id == author);
+    }
+
+    useEffect(() => {
+        getCardList();
     }, [])
 
     const getCardList = async () => {
@@ -145,9 +208,10 @@ function DeckView() {
                 card = {dialogCard}
             />
             <div style = {{display: "flex", flexDirection: "column", justifyItems: "center", alignItems: "center"}}>
-                <Typography variant="h3" sx = {{padding: 5}}>Edit this deck!</Typography>
+                <Typography variant="h3" sx = {{padding: 5}}>{isMine ? "Edit this deck!" : "Deck View"}</Typography>
                 {/*<Typography variant="h4">Deck id: {id}</Typography>*/}
             </div>
+            { isMine ? 
             <Autocomplete
                 sx = {{paddingLeft: 10, paddingRight: 10}}
                 renderInput={(params) => <TextField {...params} label = "Search for new cards" /*inputProps = {{style: {fontSize: 20}}}*/ InputLabelProps = {{style: {fontSize: 20}}}/>}
@@ -158,19 +222,19 @@ function DeckView() {
                     setAutocompleteInputValue(newInputValue)
                 }}
                 onChange = {(event, newValue) => handleAutocompleteValueChange(newValue)}
-            />
+            /> : <></>}
             <div style = {{padding: 25}}>
                 {cardListWithCount.map((card, key) => (
                     <Paper
                         sx = {{padding: 3, margin: 5, borderRadius: 1000, fontSize: 20, backgroundColor: "lightgrey", display: "flex"}}
                         key = {key}
                     >
-                        <IconButton
+                        {isMine ? <IconButton
                             sx = {{height: 32, width: 32, marginRight: 2}}
                             onClick = {() => handleDeleteCard(card)}
                         >
                             <ClearIcon/>
-                        </IconButton>
+                        </IconButton> : <></>}
                         <div style = {{display: "flex", flexGrow: 1}}>
                             <div style = {{minWidth: 275}}>
                                 {card.card_name}

@@ -15,12 +15,24 @@ export function DeckSearch() {
     const handleSearchDecks = async (event: any) => {
         event.preventDefault();
 
-        const decksLikeInfix = await fetch(`${requestPath}/decks/?name=${event.target.search.value}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem("token")
-            }
-        });
+        const token = localStorage.getItem("token");
+
+        let decksLikeInfix: any;
+
+        if (token != null) {
+
+            decksLikeInfix = await fetch(`${requestPath}/decks/?name=${event.target.search.value}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + localStorage.getItem("token")
+                }
+            });
+
+        } else {
+            decksLikeInfix = await fetch(`${requestPath}/decks/?name=${event.target.search.value}`, {
+                method: 'GET'
+            });
+        }
 
         if (!decksLikeInfix.ok) {
             console.log("Error") //TODO
