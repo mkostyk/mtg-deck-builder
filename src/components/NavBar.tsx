@@ -12,7 +12,11 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { setFlagsFromString } from 'v8';
+import { LoginContext } from './LoginContext';
+import { requestPath } from "../utils";
 
 
 interface MenuOption_t {
@@ -75,12 +79,15 @@ pages.set('Cards', [{name: 'Card search', link: '/cardSearch'}]);
 pages.set('Decks', [{name: 'Deck search', link: '/deckSearch'}, {name: 'My decks', link: '/userDecks'}]);
 
 //const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+//const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+//const settingsLogout = ['Login'];
 //const options = [['New products', 'Deals', 'All products'], ['Kończą mi się pomysły'], ['No hej', 'elo']];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
+  const { setLogin } = useContext(LoginContext);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -96,6 +103,32 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleToLogin = () => {
+    handleCloseUserMenu();
+    navigate("../login");
+  };
+
+  const handleLogout = async () => {
+    handleCloseUserMenu();
+
+    const logoutRequest = await fetch(`${requestPath}/auth/logout/`, {
+      method: 'POST',
+      headers: {
+          'Authorization': 'Token ' + localStorage.getItem("token")
+      }
+    });
+
+    if (!logoutRequest.ok) {
+      console.log("Error") // TODO
+      return;
+    }
+
+    localStorage.removeItem("token");
+    setLogin(false);
+  }
+
+  const { login } = useContext(LoginContext);
 
   return (
     <AppBar position="static" sx = {{width: "100%", marginTop: -3}}>
@@ -149,11 +182,16 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              {login
+              ?
+                <MenuItem key="logout" onClick={handleLogout}>
+                  <Typography textAlign="center">Logout</Typography>
                 </MenuItem>
-              ))}
+              :
+                <MenuItem key="login" onClick={handleToLogin}>
+                  <Typography textAlign="center">Login</Typography>
+                </MenuItem>
+            }
             </Menu>
           </Box>
         </Toolbar>

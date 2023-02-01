@@ -17,7 +17,7 @@ import Deck from "./Deck";
 export function UserDecks() {
     const [decks, setDecks] = useState([]);
 
-    const gowno = async() => {
+    const getDecks = async() => {
         const decksLikeInfix = await fetch(`${requestPath}/decks/?user_id=${-1}`, {
             method: 'GET',
             headers: {
@@ -36,7 +36,8 @@ export function UserDecks() {
     }
 
     useEffect(()=>{
-        gowno();
+        getDecks();
+        console.log(localStorage.getItem("token"));
     }, []);
 
     return (

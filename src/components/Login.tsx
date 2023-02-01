@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { LockPerson } from '@mui/icons-material';
+import { LockPerson, SettingsOutlined } from '@mui/icons-material';
 import { Box, TextField, Typography, Button, CssBaseline, Input, Grid, Link, Container } from '@mui/material';
 
 import { requestPath } from "../utils";
+import { LoginContext } from './LoginContext';
 
 
 function Login() {
     const [token, settoken] = useState(localStorage.getItem(localStorage.getItem("token") || "null"));
     const navigate = useNavigate();
+    const { setLogin } = useContext(LoginContext);
 
-    const handleLogin = (event: any) => {
+    const handleLogin = async (event: any) => {
         event.preventDefault()
-        fetch(`${requestPath}/auth/login/`, {
+
+        const loginResponse = await fetch(`${requestPath}/auth/login/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -23,18 +26,19 @@ function Login() {
                 username: event.target.username.value,
                 password: event.target.password.value
             })
-        }).then((response) => {
-            if (!response.ok) {
-                console.log("Error") // TODO
-                return;
-            }
-
-            response.json().then((data) => {
-                localStorage.setItem("token", data.token);
-                settoken(data.token);
-                navigate("/dashboard");
-            });
         });
+
+        if (!loginResponse.ok) {
+            console.log("Error");
+            return;
+        }
+
+        const loginResponseJson = await loginResponse.json();
+        localStorage.setItem("token", loginResponseJson.token);
+        settoken(loginResponseJson.token);
+        setLogin(true);
+
+        navigate("/dashboard");
     }
     
     const loginForm = (
