@@ -45,9 +45,9 @@ function DeckView() {
             });
             const cardLikeIdJson = await cardLikeId.json();
             console.log(cardLikeIdJson);
-            const gowno2 = {...cardLikeIdJson[0], deleteId: card.id};
-            console.log(gowno2)
-            return gowno2;
+            const obj = {...cardLikeIdJson[0], deleteId: card.id};
+            console.log(obj)
+            return obj;
         }))
 
         console.log(cardDataFull);
