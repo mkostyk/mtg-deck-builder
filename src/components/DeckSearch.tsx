@@ -12,25 +12,25 @@ import { NumberLiteralType } from "typescript";
 export function DeckSearch() {
     const navigate = useNavigate();
 
-    const handleSearchDecks = (event: any) => {
+    const handleSearchDecks = async (event: any) => {
         event.preventDefault();
 
-        fetch(`${requestPath}/decks/?name=${event.target.search.value}`, {
+        const decksLikeInfix = await fetch(`${requestPath}/decks/?name=${event.target.search.value}`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem("token")
             }
-        }).then((response) => {
-            if (!response.ok) {
-                console.log("Error") // TODO
-                return;
-            }
-
-            response.json().then((data) => {
-                localStorage.setItem("decks", JSON.stringify(data));
-                navigate('/deckSearchResult')
-            });
         });
+
+        if (!decksLikeInfix.ok) {
+            console.log("Error") //TODO
+            return;
+        }
+
+        const decksLikeInfixJson = await decksLikeInfix.json();
+
+        localStorage.setItem("decks", JSON.stringify(decksLikeInfixJson));
+        navigate('/deckSearchResult');
     }
 
     const searchField = (

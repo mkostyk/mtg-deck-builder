@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Box, Typography, TextField, Input, CssBaseline, Container, InputAdornment, IconButton, Grid, imageListClasses, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -17,21 +17,27 @@ import Deck from "./Deck";
 export function UserDecks() {
     const [decks, setDecks] = useState([]);
 
-    fetch(`${requestPath}/decks/?user_id=${-1}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Token ' + localStorage.getItem("token")
-        }
-    }).then((response) => {
-        if (!response.ok) {
-            console.log("Error") // TODO
+    const gowno = async() => {
+        const decksLikeInfix = await fetch(`${requestPath}/decks/?user_id=${-1}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem("token")
+            }
+        });
+
+        if (!decksLikeInfix.ok) {
+            console.log("Error") //TODO
             return;
         }
 
-        response.json().then((data) => {
-            setDecks(JSON.parse(JSON.stringify(data)));
-        });
-    });
+        const decksLikeInfixJson = await decksLikeInfix.json();
+
+        setDecks(decksLikeInfixJson);
+    }
+
+    useEffect(()=>{
+        gowno();
+    }, []);
 
     return (
     <Grid container sx={{ alignItems: 'center', marginTop: 2 }} spacing={3} >
