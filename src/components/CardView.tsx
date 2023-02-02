@@ -224,7 +224,6 @@ function CardView() {
         );
         }
 
-
     const left = 3;
 
     return (
