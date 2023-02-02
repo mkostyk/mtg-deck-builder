@@ -7,9 +7,8 @@ import { requestPath } from "../utils";
 import NavBar from "./NavBar";
 import { ImageAspectRatio } from "@mui/icons-material";
 import Stack from '@mui/material/Stack';
-import { makeStyles } from "@mui/styles";
 
-const useStyles = makeStyles({
+const classes = {
     leftGridItem: {
         fontSize: 20,
         minHeight: 40,
@@ -21,7 +20,8 @@ const useStyles = makeStyles({
     rightGridItem: {
         fontSize: 20,
     }
-})
+};
+
 
 function CardView() {
     const [image, setImage] = useState("");
@@ -75,8 +75,6 @@ function CardView() {
 
     const left = 3;
 
-    const classes = useStyles(); 
-
     return (
         <div style = {{padding: 20, display: "flex"}}>
             <img src = {image} alt = "card image"/>
@@ -89,16 +87,16 @@ function CardView() {
                         Card summary
                     </Typography>
                     <Grid container>
-                        <Grid item xs = {left} className = {classes.leftGridItem}>
+                        <Grid item xs = {left} sx = {classes.leftGridItem}>
                             Name
                         </Grid>
-                        <Grid item xs = {12 - left} className = {classes.rightGridItem}>
+                        <Grid item xs = {12 - left} sx = {classes.rightGridItem}>
                             {(card) ? (card.card_name) : "card name"}
                         </Grid>
-                        <Grid item xs = {left} className = {classes.leftGridItem}>
+                        <Grid item xs = {left} sx = {classes.leftGridItem}>
                             Mana cost
                         </Grid>
-                        <Grid item xs = {12 - left} className = {classes.rightGridItem}>
+                        <Grid item xs = {12 - left} sx = {classes.rightGridItem}>
                         {!manaObj ? "gowno" :
                         (manaObj.cost === '')
                             ? ''
@@ -116,28 +114,28 @@ function CardView() {
                             />
                         ))}
                         </Grid>
-                        <Grid item xs = {left} className = {classes.leftGridItem}>
+                        <Grid item xs = {left} sx = {classes.leftGridItem}>
                             Type line
                         </Grid>
-                        <Grid item xs = {12 - left} className = {classes.rightGridItem}>
+                        <Grid item xs = {12 - left} sx = {classes.rightGridItem}>
                             {(card) ? (card.type_line) : "card type line"}
                         </Grid>
-                        <Grid item xs = {left} className = {classes.leftGridItem}>
+                        <Grid item xs = {left} sx = {classes.leftGridItem}>
                             Power/toughness
                         </Grid>
-                        <Grid item xs = {12 - left} className = {classes.rightGridItem}>
+                        <Grid item xs = {12 - left} sx = {classes.rightGridItem}>
                             {(card) ? `${card.power}/${card.toughness}` : "card stats"}
                         </Grid>
-                        <Grid item xs = {left} className = {classes.leftGridItem}>
+                        <Grid item xs = {left} sx = {classes.leftGridItem}>
                             Text
                         </Grid>
-                        <Grid item xs = {12 - left} className = {classes.rightGridItem}>
+                        <Grid item xs = {12 - left} sx = {classes.rightGridItem}>
                             {(card) ? (card.card_text) : "card text"}
                         </Grid>
-                        <Grid item xs = {left} className = {classes.leftGridItem}>
+                        <Grid item xs = {left} sx = {classes.leftGridItem}>
                             Flavor text
                         </Grid>
-                        <Grid item xs = {12 - left} className = {classes.rightGridItem} sx = {{fontStyle: "italic"}}>
+                        <Grid item xs = {12 - left} sx = {[classes.rightGridItem, {fontStyle: "italic"}]}>
                             {(card) ? (card.flavor_text) : "card flavor text"}
                         </Grid>
                     </Grid>
