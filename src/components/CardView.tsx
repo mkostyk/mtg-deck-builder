@@ -7,6 +7,14 @@ import { requestPath } from "../utils";
 import NavBar from "./NavBar";
 import { ImageAspectRatio } from "@mui/icons-material";
 import Stack from '@mui/material/Stack';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { idText } from "typescript";
 
 const classes = {
     leftGridItem: {
@@ -27,6 +35,29 @@ function CardView() {
     const [image, setImage] = useState("");
     const [card, setCard] = useState<any>();
     const [manaObj, setManaString] = useState<any>();
+    function createPricesData(
+        type: string,
+        eur: string,
+        usd: string,
+        tix: string
+        ) {
+        return { type, eur, usd, tix};
+        }
+    
+    
+    const [costs, setCosts] = useState(
+        [createPricesData('Non-foil', "-","-", "-"),
+        createPricesData('Foil', "-", "-", "-")]
+    );
+
+    function createLegalityData(
+        format: string,
+        legality: string
+    ) {
+        return {format, legality}
+    }
+
+    const [legalities, setLegalities] = useState([createLegalityData("Standard", "Illegal")]);
 
     //todo - można wyeksportować do jakichś utilsów
     const stringManaToArray = (manaString: []) => {
@@ -54,6 +85,8 @@ function CardView() {
         setManaString(stringManaToArray(cardFromLocalStorage.mana_cost))
         console.log("xd")
 
+
+        // TODO - poprawić
         fetch(`${requestPath}/images/?id=${cardFromLocalStorage.id}`, {
             method: 'GET',
         }).then((response) => {
@@ -65,13 +98,131 @@ function CardView() {
             response.json().then((data) => {
                 setImage(data.normal);
             });
+
+            fetchPrices(cardFromLocalStorage.id);
+            fetchLegalities(cardFromLocalStorage.id);
         });
+    }
+
+    const fetchPrices = async (id: number) => {
+        const prices = await fetch(`${requestPath}/prices/?id=${id}`, {
+            method: 'GET',
+        });
+
+        if(!prices.ok) {
+            console.log("Ceny skopane");
+            return;
+        }
+
+        const numberOrNull = (value: any) => {
+            console.log(value);
+            return value == null ? "-" : value; 
+        }
+
+        const pricesJson = (await prices.json())[0];
+
+        console.log(pricesJson);
+
+        const pricesTable = [createPricesData("Non-foil", numberOrNull(pricesJson.eur),  numberOrNull(pricesJson.usd), numberOrNull(pricesJson.tix)),
+        createPricesData("Foil", numberOrNull(pricesJson.eur_foil),  numberOrNull(pricesJson.usd_foil), numberOrNull(null))];
+        
+        console.log(pricesTable);
+
+        setCosts(pricesTable);
+
+        console.log("Ceny wrzucone");
+    }
+
+    const fetchLegalities = async (id: number) => {
+        const legalities = await fetch(`${requestPath}/legalities/?id=${id}`, {
+            method: 'GET',
+        });
+
+        if(!legalities.ok) {
+            return;
+        }
+
+        const prettyString = (s: string) => {
+            return s == "legal" ? "Legal" : "Not legal";
+        }
+
+        const legalitiesJson = await legalities.json();
+
+        const legalitiesTable = [createLegalityData("Standard", prettyString(legalitiesJson.standard)),
+        createLegalityData("Pioneer", prettyString(legalitiesJson.pioneer)),
+        createLegalityData("Modern", prettyString(legalitiesJson.modern)),
+        createLegalityData("Legacy", prettyString(legalitiesJson.legacy)),
+        createLegalityData("Vintage", prettyString(legalitiesJson.vintage)),
+        createLegalityData("Commander", prettyString(legalitiesJson.commander)),
+        ];
+
+        setLegalities(legalitiesTable);
     }
 
     useEffect(() => {
         console.log("gowno")
         fetchCardData();
-    }, [])
+    }, []);
+    
+    function CostsTable() {
+    return (
+        <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <TableHead>
+            <TableRow>
+                <TableCell ><Typography fontWeight={600}>Prices</Typography></TableCell>
+                <TableCell align="right"><Typography fontWeight={600}>EUR</Typography></TableCell>
+                <TableCell align="right"><Typography fontWeight={600}>USD</Typography></TableCell>
+                <TableCell align="right"><Typography fontWeight={600}>TIX</Typography></TableCell>
+            </TableRow>
+            </TableHead>
+            <TableBody>
+            {costs.map((row) => (
+                <TableRow
+                key={row.type}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                <TableCell component="th" scope="row">
+                    {row.type}
+                </TableCell>
+                <TableCell align="right">{row.eur}</TableCell>
+                <TableCell align="right">{row.usd}</TableCell>
+                <TableCell align="right">{row.tix}</TableCell>
+                </TableRow>
+            ))}
+            </TableBody>
+        </Table>
+        </TableContainer>
+    );
+    }
+
+    function LegalityTable() {
+        return (
+            <TableContainer component={Paper}>
+            <Table size="small" aria-label="a dense table">
+                <TableHead>
+                <TableRow>
+                    <TableCell><Typography fontWeight={600}>Format</Typography></TableCell>
+                    <TableCell align="right"><Typography fontWeight={600}>Legality</Typography></TableCell>
+                </TableRow>
+                </TableHead>
+                <TableBody>
+                {legalities.map((row) => (
+                    <TableRow
+                    key={row.format}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                    <TableCell component="th" scope="row">
+                        {row.format}
+                    </TableCell>
+                    <TableCell align="right">{row.legality}</TableCell>
+                    </TableRow>
+                ))}
+                </TableBody>
+            </Table>
+            </TableContainer>
+        );
+        }
 
     const left = 3;
 
@@ -142,10 +293,10 @@ function CardView() {
                 </div>
                 <div style = {{display: "flex"}}>
                     <div style = {{width: "100%", backgroundColor: "red", margin: 40}}>
-                        jakaś tabelka na koszty
+                        {CostsTable()};
                     </div>
-                    <div style = {{width: "100%", backgroundColor: "blue", margin: 40}}>
-                        jakaś tabelka na dostępność
+                    <div style = {{width: "100%", backgroundColor: "blue", margin: 40, paddingRight: 300}}>
+                        {LegalityTable()};
                     </div>
                 </div>
             </div>
