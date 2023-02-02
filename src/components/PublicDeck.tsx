@@ -159,6 +159,7 @@ function PublicDeck (props: Deck_t) {
                 <Grid container sx={{ alignItems: 'center'}}>
                     <Grid item xs>
                         <Typography
+                            noWrap
                             component="h1"
                             variant="h5"
                             sx = {{
@@ -170,7 +171,8 @@ function PublicDeck (props: Deck_t) {
                                 letterSpacing: 1,
                                 whiteSpace: "nowrap",
                                 overflow: "hidden",
-                                height: 45
+                                textOverflow: "ellipsis",
+                                height: 45,
                             }}
                         >
                             {props.name}
