@@ -14,7 +14,7 @@ import { useTheme } from "@emotion/react";
 export function CardSearch() {
     const navigate = useNavigate();
 
-    // TODO - całe do wypierdolenia
+    // TODO - do przeróbki, bo bardziej skomplikowany request
     const handleSearchCards = async () => {
         //event.preventDefault();
 
