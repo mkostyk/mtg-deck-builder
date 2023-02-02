@@ -92,13 +92,13 @@ function PublicDeck (props: Deck_t) {
 
     const publicHTML = (
         <Grid container sx={{ alignItems: 'center' }}>
-            <Grid item>
-                <Typography variant="subtitle1" sx={{ margin: '0.5rem', marginLeft: '0.75rem' }}>
-                    {props.private? "Private" : "Public"}
-                </Typography>
+            <Grid item sx={{ padding: 0.75 }}>
+                {props.private? <Lock /> : <Public />}
             </Grid>
             <Grid item>
-                {props.private? <Lock /> : <Public />}
+                <Typography variant="subtitle1">
+                    {props.private? <span style = {{color: "red"}}>Private</span> : <span style = {{color: "green"}}>Public</span>}
+                </Typography>
             </Grid>
         </Grid>
     )
@@ -150,11 +150,29 @@ function PublicDeck (props: Deck_t) {
     )
 
     const deckHTML = (
-        <Button onClick={handleEdit} sx={{ width: '100%' }}>
-            <Paper elevation={3} sx={{ width: '100%' }}>
+        <Button sx={{ width: '100%' }}>
+            <Paper
+                elevation={3}
+                sx={{ width: '100%', padding: 2, backgroundColor: "lightgrey" }}
+                onClick={handleEdit}
+            >
                 <Grid container sx={{ alignItems: 'center'}}>
                     <Grid item xs>
-                        <Typography component="h1" variant="h5" sx={{ margin: '0.5rem' }}>
+                        <Typography
+                            component="h1"
+                            variant="h5"
+                            sx = {{
+                                padding: 1.25,
+                                display: "flex",
+                                justifyContent: "left",
+                                fontWeight: 600,
+                                fontSize: 22,
+                                letterSpacing: 1,
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                height: 45
+                            }}
+                        >
                             {props.name}
                         </Typography>
 
