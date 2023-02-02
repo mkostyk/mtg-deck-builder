@@ -24,7 +24,7 @@ function DeckView() {
     const [cardListWithCount, setCardListWithCount] = useState<any[]>([]);
     const { login } = useContext(LoginContext);
     const [isMine, setIsMine] = useState<boolean>(false);
-    const [deck, setDeck] = useState<Deck_t>();
+    const [deck, setDeck] = useState<Deck_t>({id:-1, author:-1});
 
     useEffect(() => {
         getDeck();
@@ -50,6 +50,7 @@ function DeckView() {
         }
 
         if(!deckRequest.ok){
+            console.log("Skucha");
             setDeck({id: -1, author: -1});
             return;
         }
@@ -85,12 +86,23 @@ function DeckView() {
     }, [])
 
     const getCardList = async () => {
-        const response = await fetch(`${requestPath}/cardsInDeck/?deck_id=${deckId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem("token")
-            }
-        });
+        const token = localStorage.getItem("token");
+        let response: any;
+        
+        console.log(token);
+
+        if(token != null) {
+            response = await fetch(`${requestPath}/cardsInDeck/?deck_id=${deckId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + localStorage.getItem("token")
+                }
+            });
+        } else {
+            response = await fetch(`${requestPath}/cardsInDeck/?deck_id=${deckId}`, {
+                method: 'GET'
+            });
+        }
 
         if (!response.ok) {
             // TODO - wrong token
@@ -199,74 +211,81 @@ function DeckView() {
 
         getCardList()
     }
-
-    return (
-        <div>
-            <CardDialog
-                open = {openDialog}
-                setOpen = {setOpenDialog}
-                card = {dialogCard}
-            />
-            <div style = {{display: "flex", flexDirection: "column", justifyItems: "center", alignItems: "center"}}>
-                <Typography variant="h3" sx = {{padding: 5}}>{isMine ? "Edit this deck!" : "Deck View"}</Typography>
-                {/*<Typography variant="h4">Deck id: {id}</Typography>*/}
-            </div>
-            { isMine ? 
-            <Autocomplete
-                sx = {{paddingLeft: 10, paddingRight: 10}}
-                renderInput={(params) => <TextField {...params} label = "Search for new cards" /*inputProps = {{style: {fontSize: 20}}}*/ InputLabelProps = {{style: {fontSize: 20}}}/>}
-                options = {
-                    cardNames.filter(card => card.name.includes(autocompleteInputValue))
-                             .map(card => ({label: card.name, id: card.id})).slice(0, 10)}
-                onInputChange = {(event, newInputValue) => {
-                    setAutocompleteInputValue(newInputValue)
-                }}
-                onChange = {(event, newValue) => handleAutocompleteValueChange(newValue)}
-            /> : <></>}
-            <div style = {{padding: 25}}>
-                {cardListWithCount.map((card, key) => (
-                    <Paper
-                        sx = {{padding: 3, margin: 5, borderRadius: 1000, fontSize: 20, backgroundColor: "lightgrey", display: "flex"}}
-                        key = {key}
-                    >
-                        {isMine ? <IconButton
-                            sx = {{height: 32, width: 32, marginRight: 2}}
-                            onClick = {() => handleDeleteCard(card)}
+    
+    const deckView = () => {
+        if(deck.id != -1) {
+        return (
+            <div>
+                <CardDialog
+                    open = {openDialog}
+                    setOpen = {setOpenDialog}
+                    card = {dialogCard}
+                />
+                <div style = {{display: "flex", flexDirection: "column", justifyItems: "center", alignItems: "center"}}>
+                    <Typography variant="h3" sx = {{padding: 5}}>{isMine ? "Edit this deck!" : "Deck View"}</Typography>
+                    {/*<Typography variant="h4">Deck id: {id}</Typography>*/}
+                </div>
+                { isMine ? 
+                <Autocomplete
+                    sx = {{paddingLeft: 10, paddingRight: 10}}
+                    renderInput={(params) => <TextField {...params} label = "Search for new cards" /*inputProps = {{style: {fontSize: 20}}}*/ InputLabelProps = {{style: {fontSize: 20}}}/>}
+                    options = {
+                        cardNames.filter(card => card.name.includes(autocompleteInputValue))
+                                .map(card => ({label: card.name, id: card.id})).slice(0, 10)}
+                    onInputChange = {(event, newInputValue) => {
+                        setAutocompleteInputValue(newInputValue)
+                    }}
+                    onChange = {(event, newValue) => handleAutocompleteValueChange(newValue)}
+                /> : <></>}
+                <div style = {{padding: 25}}>
+                    {cardListWithCount.map((card, key) => (
+                        <Paper
+                            sx = {{padding: 3, margin: 5, borderRadius: 1000, fontSize: 20, backgroundColor: "lightgrey", display: "flex"}}
+                            key = {key}
                         >
-                            <ClearIcon/>
-                        </IconButton> : <></>}
-                        <div style = {{display: "flex", flexGrow: 1}}>
-                            <div style = {{minWidth: 275}}>
-                                {card.card_name}
+                            {isMine ? <IconButton
+                                sx = {{height: 32, width: 32, marginRight: 2}}
+                                onClick = {() => handleDeleteCard(card)}
+                            >
+                                <ClearIcon/>
+                            </IconButton> : <></>}
+                            <div style = {{display: "flex", flexGrow: 1}}>
+                                <div style = {{minWidth: 275}}>
+                                    {card.card_name}
+                                </div>
+                                <div style = {{marginLeft: 25}}>
+                                    {(stringManaToArray(card.mana_cost).cost === '')
+                                    ? ''
+                                    : <img
+                                        alt = "manaCost"
+                                        src = {require(`../icons/${stringManaToArray(card.mana_cost).cost}.png`)} style = {{width: 24}}
+                                        />
+                                    }
+                                    {stringManaToArray(card.mana_cost).mana.map((manaElem, key) => (
+                                        <img
+                                            key = {key}
+                                            alt = "manaElem"
+                                            src = {require(`../icons/${manaElem}.png`)} style = {{width: 24}}
+                                        />
+                                    ))}
+                                </div>
                             </div>
-                            <div style = {{marginLeft: 25}}>
-                                {(stringManaToArray(card.mana_cost).cost === '')
-                                ? ''
-                                : <img
-                                    alt = "manaCost"
-                                    src = {require(`../icons/${stringManaToArray(card.mana_cost).cost}.png`)} style = {{width: 24}}
-                                    />
-                                }
-                                {stringManaToArray(card.mana_cost).mana.map((manaElem, key) => (
-                                    <img
-                                        key = {key}
-                                        alt = "manaElem"
-                                        src = {require(`../icons/${manaElem}.png`)} style = {{width: 24}}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                        <IconButton sx = {{width: 32, height: 32, marginRight: 2}}>
-                            {card.count}
-                        </IconButton>      
-                        <Button variant = "contained" onClick = {() => handleShowDetailButton(card.id)}>
-                            Click for details
-                        </Button>
-                    </Paper>
-                ))}
+                            <IconButton sx = {{width: 32, height: 32, marginRight: 2}}>
+                                {card.count}
+                            </IconButton>      
+                            <Button variant = "contained" onClick = {() => handleShowDetailButton(card.id)}>
+                                Click for details
+                            </Button>
+                        </Paper>
+                    ))}
+                </div>
             </div>
-        </div>
-    );
+        );} else {
+            return <></>;
+        }
+    }
+
+    return deckView();
 }
 
 export default DeckView;
