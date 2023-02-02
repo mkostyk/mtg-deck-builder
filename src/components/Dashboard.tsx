@@ -129,27 +129,20 @@ function Dashboard() {
     )
 
     const dashboardHTML = (
-        <Grid container alignItems="center" justifyContent="center">
-            <Grid item xs={0}>
-                <Typography variant="h2">
-                    Dashboard
-                </Typography>
-            </Grid>
-
-            <Grid item xs={12}>
-                <button onClick={logout}>Logout</button>
-            </Grid>
-
-            <Grid item xs={12}>
+        <div>
+            <Typography variant="h3" sx = {{padding: 6, width: "100%", display: "flex", justifyContent: "center"}}>
+                Dashboard
+            </Typography>
+            <div style = {{padding: 5, paddingTop: 0, display: "flex", alignItems: "center", justifyContent: "center"}}>
                 {deckListHTML()}
-            </Grid>
 
-            <Fab color="primary" sx = {{ position: "fixed", right: "min(4rem, 10vw)", bottom: "min(4rem, 10vw)", padding: "2.5rem" }} onClick={handleOpenForm}>
-                <AddIcon fontSize="large"/>
-            </Fab>
+                <Fab color="primary" sx = {{ position: "fixed", right: "min(4rem, 10vw)", bottom: "min(4rem, 10vw)", padding: "2.5rem" }} onClick={handleOpenForm}>
+                    <AddIcon fontSize="large"/>
+                </Fab>
 
-            {newDeckForm}
-        </Grid>
+                {newDeckForm}
+            </div>
+        </div>
     )
 
     return (
