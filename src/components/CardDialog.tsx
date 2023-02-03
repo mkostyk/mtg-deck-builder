@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, Typography, Button } from "@mui/material";
 import React, {useState, useEffect} from "react";
 import { requestPath } from "../utils";
+import { useNavigate } from 'react-router-dom';
 
 export interface DialogInterface {
     card: any,
@@ -12,6 +13,7 @@ const CardDialog = (props: DialogInterface) => {
     const [cardInfo, setCardInfo] = useState<any>({});
     const [cardPrices, setCardPrices] = useState<any>({});
     const [cardImages, setCardImages] = useState<any>({});
+    const navigate = useNavigate();
 
     const getCardInfo = async () => {
         console.log(props.card)
@@ -20,7 +22,7 @@ const CardDialog = (props: DialogInterface) => {
         });
         const cardLikeIdJson = await cardLikeId.json();
         console.log(cardLikeIdJson[0]);
-        setCardInfo({...cardLikeIdJson[0]});
+        setCardInfo(cardLikeIdJson);
     }
 
     const getCardPrices = async () => {
@@ -42,6 +44,11 @@ const CardDialog = (props: DialogInterface) => {
         console.log(cardImagesJson);
         setCardImages({...cardImagesJson});
 
+    }
+
+    const handleClick = async () => {
+        localStorage.setItem("card", JSON.stringify(cardInfo));
+        navigate("/cardView");
     }
 
     useEffect(() => {
@@ -74,7 +81,7 @@ const CardDialog = (props: DialogInterface) => {
                         </div>
                     </div>
                     <div style = {{display: "flex", justifyContent: "right", paddingTop: 20}}>
-                        <Button variant = "contained">
+                        <Button variant = "contained" onClick={handleClick}>
                             Click to know more!
                         </Button>
                     </div>
