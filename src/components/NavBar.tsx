@@ -112,7 +112,7 @@ function ResponsiveAppBar() {
 
   const handleToRegister = () => {
     handleCloseUserMenu();
-    navigate("../login");
+    navigate("../register");
   };
 
   const handleLogout = async () => {
@@ -194,9 +194,15 @@ function ResponsiveAppBar() {
                   <Typography textAlign="center">Logout</Typography>
                 </MenuItem>
               :
+                <div>
                 <MenuItem key="login" onClick={handleToLogin}>
                   <Typography textAlign="center">Login</Typography>
                 </MenuItem>
+                <MenuItem key="register" onClick={handleToRegister}>
+                  <Typography textAlign="center">Register</Typography>
+                </MenuItem>
+                </div>
+              
               }
             </Menu>
           </Box>
