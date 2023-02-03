@@ -12,6 +12,8 @@ import CardDialog from "./CardDialog";
 import { DialogInterface } from "./CardDialog";
 import cardNames from "../assets/card_names-1.json"
 import { LoginContext } from './LoginContext';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 
 export interface Deck_t {
     id: number;
@@ -25,10 +27,20 @@ function DeckView() {
     const { login } = useContext(LoginContext);
     const [isMine, setIsMine] = useState<boolean>(false);
     const [deck, setDeck] = useState<Deck_t>({id:-1, author:-1});
+    const [privacy, setPrivacy] = useState<boolean>(false);
+    const [privacySwitch, setPrivacySwitch] = useState(<></>);
 
     useEffect(() => {
         getDeck();
     }, [login])
+
+    const initialSwitch = (privacy: boolean) => {
+        console.log("Reload");
+        setPrivacySwitch( privacy ?
+            <FormControlLabel control={<Switch defaultChecked onChange={changePrivacy}/>} label="Private" /> :
+            <FormControlLabel control={<Switch onChange={changePrivacy}/>} label="Private" />);
+        
+    }
 
     const getDeck = async () => {
         const token = localStorage.getItem("token");
@@ -60,7 +72,8 @@ function DeckView() {
         console.log(deckRequestJson);
 
         setDeck({id: deckRequestJson[0].id, author: deckRequestJson[0].author});
-
+        setPrivacy(deckRequestJson[0].private);
+        initialSwitch(deckRequestJson[0].private);
         checkIfMine(deckRequestJson[0].author);
     }
 
@@ -79,6 +92,23 @@ function DeckView() {
         console.log(author);
 
         setIsMine(myIdJson.user_id == author);
+    }
+
+    const changePrivacy = async () => {
+        const token = localStorage.getItem("token");
+        const response = await fetch(`${requestPath}/privacy/?deck_id=${deckId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem("token")
+            }
+        });
+
+        if (!response.ok) {
+            console.log("Error");
+            return;
+        }
+
+        setPrivacy(!privacy);
     }
 
     useEffect(() => {
@@ -225,6 +255,7 @@ function DeckView() {
                     <Typography variant="h3" sx = {{padding: 5}}>{isMine ? "Edit this deck!" : "Deck View"}</Typography>
                     {/*<Typography variant="h4">Deck id: {id}</Typography>*/}
                 </div>
+                {privacySwitch}
                 { isMine ? 
                 <Autocomplete
                     sx = {{paddingLeft: 10, paddingRight: 10}}
