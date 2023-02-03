@@ -12,12 +12,14 @@ import Dashboard from "./Dashboard";
 import Register from "./Register";
 import DeckSearchResult from "./DeckSearchResult";
 import CardSearchResult from "./CardSearchResult";
+import TournamentArchetypes from "./TournamentArchetypes";
 import DeckView from "./DeckView";
 import CardView from "./CardView";
 import { DeckSearch } from "./DeckSearch";
 import { UserDecks } from './UserDecks';
 import { LoginContext } from "./LoginContext";
 import { useState, useEffect } from "react";
+
 
 function App() {
     const navigate = useNavigate();
@@ -101,6 +103,7 @@ function App() {
                     <Route path="cardView" element={<CardView />} />
                     <Route path="deckSearch" element={<DeckSearch />} />
                     <Route path="userDecks" element={<UserDecks />} />
+                    <Route path="tournamentArchetypes" element={<TournamentArchetypes />} />
                 </Routes>
             </ThemeProvider>
         </LoginContext.Provider>

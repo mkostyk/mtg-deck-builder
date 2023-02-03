@@ -17,6 +17,7 @@ import { useState, useEffect, useContext } from "react";
 import { setFlagsFromString } from 'v8';
 import { LoginContext } from './LoginContext';
 import { requestPath } from "../utils";
+import Register from './Register';
 
 
 interface MenuOption_t {
@@ -76,7 +77,7 @@ function BasicMenu(props: Menu_t) {
 
 const pages = new Map<string, Array<MenuOption_t>>();
 pages.set('Cards', [{name: 'Card search', link: '/cardSearch'}]);
-pages.set('Decks', [{name: 'Deck search', link: '/deckSearch'}, {name: 'My decks', link: '/userDecks'}]);
+pages.set('Decks', [{name: 'Deck search', link: '/deckSearch'}, {name: 'My decks', link: '/userDecks'}, {name: 'Tournaments Archetypes', link: '/tournamentArchetypes'}]);
 
 //const pages = ['Products', 'Pricing', 'Blog'];
 //const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -105,6 +106,11 @@ function ResponsiveAppBar() {
   };
 
   const handleToLogin = () => {
+    handleCloseUserMenu();
+    navigate("../login");
+  };
+
+  const handleToRegister = () => {
     handleCloseUserMenu();
     navigate("../login");
   };
@@ -191,7 +197,7 @@ function ResponsiveAppBar() {
                 <MenuItem key="login" onClick={handleToLogin}>
                   <Typography textAlign="center">Login</Typography>
                 </MenuItem>
-            }
+              }
             </Menu>
           </Box>
         </Toolbar>
