@@ -12,6 +12,7 @@ export interface Deck_t {
     name: string;
     private: boolean;
     updateMethod: any;
+    mine: boolean;
 }
 
 function PublicDeck (props: Deck_t) {
@@ -154,8 +155,9 @@ function PublicDeck (props: Deck_t) {
             <Paper
                 elevation={3}
                 sx={{ width: '100%', padding: 2, backgroundColor: "lightgrey" }}
-                onClick={handleEdit}
+                onClick={props.mine? handleOpen: handleEdit}
             >
+                {menu}
                 <Grid container sx={{ alignItems: 'center'}}>
                     <Grid item xs>
                         <Typography
@@ -181,7 +183,6 @@ function PublicDeck (props: Deck_t) {
                         {publicHTML}
                     </Grid>
                     <Grid item xs={12} height='1.5vw'>
-
                     </Grid>
                 </Grid>
                 {footer}

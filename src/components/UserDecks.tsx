@@ -11,6 +11,7 @@ import { NumberLiteralType } from "typescript";
 import PublicDeck from "./PublicDeck";
 import { Deck_t } from "./Deck";
 import Deck from "./Deck";
+import Decklist from "./Decklist";
 
 
 
@@ -40,13 +41,6 @@ export function UserDecks() {
         console.log(localStorage.getItem("token"));
     }, []);
 
-    return (
-    <Grid container sx={{ alignItems: 'center', marginTop: 2 }} spacing={3} >
-        {decks.map((deck: Deck_t) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={deck.id}>
-                <Deck key={deck.id} id={deck.id} name={deck.name} private={deck.private} updateMethod={null} />
-            </Grid>
-        ))}   
-    </Grid>   )
+    return <Decklist data={decks} updateMethod={null} mine={true}/>
 
 }

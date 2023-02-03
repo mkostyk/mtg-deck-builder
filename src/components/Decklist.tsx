@@ -5,6 +5,7 @@ import PublicDeck from './PublicDeck';
 export interface Decklist_t {
     data: Array<Deck_t>;
     updateMethod: any;
+    mine: boolean;
 }
 
 function Decklist (props: Decklist_t) {
@@ -18,6 +19,7 @@ function Decklist (props: Decklist_t) {
                         name={deck.name}
                         private={deck.private}
                         updateMethod={props.updateMethod}
+                        mine={props.mine}
                     />
                 </Grid>
             ))}   

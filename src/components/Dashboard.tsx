@@ -44,7 +44,7 @@ function Dashboard() {
 
     const deckListHTML = () => {
         if (displayDeckList) {
-            return <Decklist data={deckList} updateMethod={getDeckList}/>
+            return <Decklist data={deckList} updateMethod={getDeckList} mine={true}/>
         } else {
             getDeckList();
             return null

@@ -14,6 +14,11 @@ import cardNames from "../assets/card_names-1.json"
 import { LoginContext } from './LoginContext';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 export interface Deck_t {
     id: number;
@@ -28,19 +33,52 @@ function DeckView() {
     const [isMine, setIsMine] = useState<boolean>(false);
     const [deck, setDeck] = useState<Deck_t>({id:-1, author:-1});
     const [privacy, setPrivacy] = useState<boolean>(false);
-    const [privacySwitch, setPrivacySwitch] = useState(<></>);
+    const [format, setFormat] = useState("");
 
     useEffect(() => {
         getDeck();
     }, [login])
 
-    const initialSwitch = (privacy: boolean) => {
-        console.log("Reload");
-        setPrivacySwitch( privacy ?
-            <FormControlLabel control={<Switch defaultChecked onChange={changePrivacy}/>} label="Private" /> :
-            <FormControlLabel control={<Switch onChange={changePrivacy}/>} label="Private" />);
-        
-    }
+    const handleChangeFormat = async (event: SelectChangeEvent) => {
+
+        const newFormat = event.target.value as string
+        console.log(newFormat);
+
+        const token = localStorage.getItem("token");
+        const response = await fetch(`${requestPath}/changeFormat/?deck_id=${deckId}&format_name=${newFormat}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem("token")
+            }
+        });
+
+        if (!response.ok) {
+            console.log("Error");
+            return;
+        }
+
+        setFormat(newFormat);
+    };
+
+    const selectField = (<Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Format</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={format}
+            label="Format"
+            onChange={handleChangeFormat}
+          >
+            <MenuItem value={"Standard"}>Standard</MenuItem>
+            <MenuItem value={"Pioneer"}>Pioneer</MenuItem>
+            <MenuItem value={"Modern"}>Modern</MenuItem>
+            <MenuItem value={"Legacy"}>Legacy</MenuItem>
+            <MenuItem value={"Vintage"}>Vintage</MenuItem>
+            <MenuItem value={"Commander"}>Commander</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>)
 
     const getDeck = async () => {
         const token = localStorage.getItem("token");
@@ -67,14 +105,14 @@ function DeckView() {
             return;
         }
 
-        const deckRequestJson = await deckRequest.json();
+        const deckRequestJson = (await deckRequest.json())[0];
 
         console.log(deckRequestJson);
 
-        setDeck({id: deckRequestJson[0].id, author: deckRequestJson[0].author});
-        setPrivacy(deckRequestJson[0].private);
-        initialSwitch(deckRequestJson[0].private);
-        checkIfMine(deckRequestJson[0].author);
+        setDeck({id: deckRequestJson.id, author: deckRequestJson.author});
+        setPrivacy(deckRequestJson.private);
+        setFormat(deckRequestJson.format);
+        checkIfMine(deckRequestJson.author);
     }
 
     const checkIfMine =  async (author: any) => {
@@ -96,7 +134,7 @@ function DeckView() {
 
     const changePrivacy = async () => {
         const token = localStorage.getItem("token");
-        const response = await fetch(`${requestPath}/privacy/?deck_id=${deckId}`, {
+        const response = await fetch(`${requestPath}/changePrivacy/?deck_id=${deckId}`, {
             method: 'POST',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem("token")
@@ -255,7 +293,16 @@ function DeckView() {
                     <Typography variant="h3" sx = {{padding: 5}}>{isMine ? "Edit this deck!" : "Deck View"}</Typography>
                     {/*<Typography variant="h4">Deck id: {id}</Typography>*/}
                 </div>
-                {privacySwitch}
+                    {isMine?
+                        (privacy ?
+                        <FormControlLabel control={<Switch defaultChecked onChange={changePrivacy}/>} label="Private" /> :
+                        <FormControlLabel control={<Switch onChange={changePrivacy}/>} label="Private" />) :
+                        <></>
+                    }
+                    {isMine?
+                        selectField :
+                        <></>
+                    }
                 { isMine ? 
                 <Autocomplete
                     sx = {{paddingLeft: 10, paddingRight: 10}}
