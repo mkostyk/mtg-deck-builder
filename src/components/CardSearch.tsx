@@ -14,6 +14,32 @@ import { useTheme } from "@emotion/react";
 export function CardSearch() {
     const navigate = useNavigate();
 
+    const parseColors = () => {
+        let result: string;
+        result = "";
+        result += chosenColors.B ? "B" : "";
+        result += chosenColors.G ? "G" : "";
+        result += chosenColors.R ? "R" : "";
+        result += chosenColors.U ? "U" : "";
+        result += chosenColors.W ? "W" : "";
+        return result;
+    }
+
+    const parseRequest = () => {
+        let request: string;
+        request = "?page=1";
+        request += "&name=" + cardname;
+        request += "&type=";
+        chosenTypes.forEach((type) => {
+            request += type + " ";
+        })
+        request += chosenSubtype;
+        request += "&format_name=" + chosenFormat;
+        request += "&color_identity=" + parseColors();
+        console.log(request);
+        return request;
+    }
+
     // TODO - do przeróbki, bo bardziej skomplikowany request
     const handleSearchCards = async () => {
         //event.preventDefault();
@@ -24,7 +50,9 @@ export function CardSearch() {
         console.log(chosenColors);
         console.log(chosenSubtype);*/
 
-        const cardsLikeInfix = await fetch(`${requestPath}/cards/?name=${cardname}`, {
+        const request = parseRequest();
+
+        const cardsLikeInfix = await fetch(`${requestPath}/cards/${request}`, {
             method: 'GET' // TODO - auth header if there is a token in localStorage
         });
 
@@ -59,7 +87,7 @@ export function CardSearch() {
         {label: "Enchantment", id: 4},
     ]
 
-    const [chosenTypes, setChosenTypes] = useState(["Creature"]);
+    const [chosenTypes, setChosenTypes] = useState<string[]>([]);
 
     const deleteChosenType = (chosenType: any) => {
         setChosenTypes(prevChosenTypes => prevChosenTypes.filter(prevChosenType => prevChosenType !== chosenType))
