@@ -292,11 +292,11 @@ function CardView() {
                     </Grid>
                 </div>
                 <div style = {{display: "flex"}}>
-                    <div style = {{width: "100%", backgroundColor: "red", margin: 40}}>
-                        {CostsTable()};
+                    <div style = {{width: "100%",  margin: 40}}>
+                        {CostsTable()}
                     </div>
-                    <div style = {{width: "100%", backgroundColor: "blue", margin: 40, paddingRight: 300}}>
-                        {LegalityTable()};
+                    <div style = {{width: "100%",  margin: 40, paddingRight: 300}}>
+                        {LegalityTable()}
                     </div>
                 </div>
             </div>
