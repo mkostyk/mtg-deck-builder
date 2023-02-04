@@ -59,7 +59,7 @@ export function DeckSearch() {
       setFormat(event.target.value as string);
     };
 
-    const selectField = (<Box sx={{ minWidth: 120 }}>
+    const selectField = (<Box sx={{ minWidth: 120, marginLeft: 2 }}>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Format</InputLabel>
           <Select
@@ -81,8 +81,8 @@ export function DeckSearch() {
 
     const searchField = (
         <Box component="form" onSubmit={handleSearchDecks} 
-        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh', marginTop: 12}}>
-            <Typography component="h1" variant="h5" sx={{ margin: '0.5rem' }}>
+        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh', margin: 4, padding: 4}}>
+            <Typography component="h1" variant="h4" sx = {{marginBottom: 4}}>
                 Search for decks
             </Typography>
 
@@ -92,17 +92,17 @@ export function DeckSearch() {
                         <Input defaultValue=""/>
                     </TextField>
                 </Grid>
-
+                <Grid item xs = {2}>
+                    {selectField}
+                </Grid>
                 <Grid item>
                     <IconButton type="submit" color='primary' sx={{ margin: '1rem' }}>
                         <SearchIcon />
                     </IconButton>
                 </Grid>
-            </Grid>       
-            {selectField}    
+            </Grid>           
         </Box>
     )
 
     return searchField;
-
 }
