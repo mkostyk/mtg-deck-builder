@@ -27,15 +27,17 @@ export function CardSearch() {
 
     const parseRequest = () => {
         let request: string;
-        request = "?page=1";
-        request += "&name=" + cardname;
+        request = "?name=" + cardname;
         request += "&type=";
         chosenTypes.forEach((type) => {
             request += type + " ";
         })
         request += chosenSubtype;
         request += "&format_name=" + chosenFormat;
-        request += "&color_identity=" + parseColors();
+        const parsedColors = parseColors();
+        if(parsedColors != "") {
+            request += "&color_identity=" + parseColors();
+        }
         console.log(request);
         return request;
     }
@@ -51,8 +53,11 @@ export function CardSearch() {
         console.log(chosenSubtype);*/
 
         const request = parseRequest();
+        console.log(request);
 
-        const cardsLikeInfix = await fetch(`${requestPath}/cards/${request}`, {
+        localStorage.setItem("request", request);
+
+        /*const cardsLikeInfix = await fetch(`${requestPath}/cards/${request}`, {
             method: 'GET' // TODO - auth header if there is a token in localStorage
         });
 
@@ -76,7 +81,7 @@ export function CardSearch() {
             return gowno;
         }))
         
-        localStorage.setItem("cards", JSON.stringify(cardData));
+        localStorage.setItem("cards", JSON.stringify(cardData));*/
         navigate("../cardSearchResult");
     }
 

@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { requestPath } from "../utils";
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 interface Archetype_t {
     id: number;
@@ -21,9 +23,11 @@ interface Archetype_t {
 function TournamentArchetypes() {
     const navigate = useNavigate();
     const [archetypes, setArchetypes] = useState<any[]>([]);
+    const [page, setPage] = useState(1);
+    const [nextPage, setNextPage] = useState(false);
 
     const fetchArchetypes = async () => {
-        const archetypesRequest = await fetch(`${requestPath}/tournamentArchetypes/?page=1&archetype=Aggro`, {
+        const archetypesRequest = await fetch(`${requestPath}/tournamentArchetypes/?page=${page}&archetype=`, {
             method: 'GET'
         });
 
@@ -52,15 +56,36 @@ function TournamentArchetypes() {
         console.log(fetchedArchetypes);
 
         setArchetypes(fetchedArchetypes);
+
+        const checkNextPage = await fetch(`${requestPath}/tournamentArchetypes/?page=${page+1}&archetype=`, {
+            method: 'GET',
+        });
+
+        if (!checkNextPage.ok) {
+            setNextPage(false);
+            return;
+        }
+
+        const nextPageJson = await checkNextPage.json();
+        
+        setNextPage(nextPageJson.length > 0);
     }
 
     useEffect(() => {
         fetchArchetypes();
-    }, [])
+    }, [page])
 
     const handleClick = (deckId: number) => {
         return () => {navigate(`/deckView/${deckId}`);};
     };
+
+    const incrementPage = () => {
+        setPage(page + 1);
+    }
+
+    const decrementPage = () => {
+        setPage(page - 1);
+    }
 
     const Archetype = (props: Archetype_t) => {
         console.log(props);
@@ -95,15 +120,29 @@ function TournamentArchetypes() {
                     <Grid item xs={12} height='1.5vw'>
                     </Grid>
                 </Grid>
-                <Typography variant="caption" sx={{ margin: '0.5rem', marginRight: '0.75rem' }}>
-                    Popularity: {props.popularity}
-                </Typography>
+                <Grid container justifyContent='flex-start'>
+                    <Grid item>
+                        <Typography variant="caption" sx={{ margin: '0.5rem', marginRight: '0.75rem' }}>
+                            Format: {props.format}
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs>
+                    </Grid>
+
+                    <Grid item>
+                        <Typography variant="caption" sx={{ margin: '0.5rem', marginRight: '0.75rem' }}>
+                            Popularity: {props.popularity}%
+                        </Typography>
+                    </Grid>
+                </Grid>
             </Paper>
         </Button>)
 
     }
 
     return (
+        <div>
         <Grid container sx={{ alignItems: 'center', padding: 3, paddingTop: 0}} spacing={3} >
             {archetypes.map((deck: Archetype_t) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={deck.id}>
@@ -118,6 +157,19 @@ function TournamentArchetypes() {
                 </Grid>
             ))}   
         </Grid>
+        {page > 1?
+            <IconButton aria-label="delete" onClick={decrementPage}>
+                <NavigateBeforeIcon/>
+            </IconButton> :
+            <>
+            </>}
+            {nextPage ?
+            <IconButton aria-label="delete" onClick={incrementPage}>
+                <NavigateNextIcon />
+            </IconButton> :
+            <></>
+            }
+        </div>
     );
 }
 
