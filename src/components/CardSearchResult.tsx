@@ -21,11 +21,26 @@ export interface Card_t {
     imageURL: string;
 }
 
-function handleClickCard(id:number, nav: any) {
+const handleClickCard = async (id:number, nav: any) => {
     console.log(id);
     
-    fetch(`${requestPath}/cards/?id=${id}`, {
-        method: 'GET' // TODO - auth header if there is a token in localStorage
+    const cardRequest = await fetch(`${requestPath}/cards/?id=${id}`, {
+        method: 'GET'
+    });
+
+    if(!cardRequest.ok) {
+        return;
+    }
+
+    const cardJson = cardRequest.json();
+
+    console.log(JSON.stringify(cardJson));
+    localStorage.setItem("card", JSON.stringify(cardJson));
+    nav('/cardView');
+
+
+    /*fetch(`${requestPath}/cards/?id=${id}`, {
+        method: 'GET'
     }).then((response) => {
         if (!response.ok) {
             console.log("Error") // TODO
@@ -37,7 +52,7 @@ function handleClickCard(id:number, nav: any) {
             localStorage.setItem("card", JSON.stringify(data));
             nav('/cardView');
         });
-    });
+    });*/
 }
 
 function CardSearchResult() {

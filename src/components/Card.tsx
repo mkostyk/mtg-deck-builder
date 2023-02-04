@@ -12,8 +12,21 @@ function DeckView(props: Card_t) {
     const [image, setImage] = useState("");
     const [loaded, setLoaded] = useState(false);
 
-    const fetchImage = (id: number) => {
-        fetch(`${requestPath}/images/?id=${id}`, {
+    const fetchImage =  async(id: number) => {
+        const imageRequest = await fetch(`${requestPath}/images/?id=${id}`, {
+            method: 'GET',
+        });
+        
+        if(!imageRequest.ok) {
+            return;
+        }
+
+        const imageJson = await imageRequest.json();
+
+        setImage(imageJson.small);
+        setLoaded(true);
+
+        /*fetch(`${requestPath}/images/?id=${id}`, {
             method: 'GET',
         }).then((response) => {
             if (!response.ok) {
@@ -25,11 +38,24 @@ function DeckView(props: Card_t) {
                 setImage(data.small);
                 setLoaded(true);
             });
-        });
+        });*/
     }
 
-    const fetchCard = (id: number) => {
-        fetch(`${requestPath}/cards/?id=${id}`, {
+    const fetchCard = async (id: number) => {
+        const cardRequest = await fetch(`${requestPath}/cards/?id=${id}`, {
+            method: 'GET',
+        });
+
+        if(!cardRequest.ok) {
+            return;
+        }
+
+        const cardJson = (await cardRequest.json())[0];
+
+        setCard({id: cardJson.id, name: cardJson.card_name});
+        fetchImage(cardJson.id);
+
+        /*fetch(`${requestPath}/cards/?id=${id}`, {
             method: 'GET',
         }).then((response) => {
             if (!response.ok) {
@@ -41,7 +67,7 @@ function DeckView(props: Card_t) {
                 setCard({id: data[0].id, name: data[0].card_name});
                 fetchImage(data[0].id);
             });
-        });
+        });*/
     }
 
     const cardHTML = () => {

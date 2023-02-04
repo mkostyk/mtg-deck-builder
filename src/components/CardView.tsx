@@ -77,7 +77,7 @@ function CardView() {
         return res;
     }
 
-    const fetchCardData = () => {
+    const fetchCardData = async () => {
         const cardFromLocalStorage = JSON.parse(localStorage.getItem("card") || "null")[0];
         console.log(cardFromLocalStorage);
         setCard(cardFromLocalStorage);
@@ -85,9 +85,23 @@ function CardView() {
         setManaString(stringManaToArray(cardFromLocalStorage.mana_cost))
         console.log("xd")
 
+        const cardRequest = await fetch(`${requestPath}/images/?id=${cardFromLocalStorage.id}`, {
+            method: 'GET',
+        });
 
+        if(!cardRequest.ok) {
+            return;
+        }
+
+        const cardJson = await cardRequest.json();
+
+        setImage(cardJson.normal);
+
+        fetchPrices(cardFromLocalStorage.id);
+        fetchLegalities(cardFromLocalStorage.id);
+        
         // TODO - poprawić
-        fetch(`${requestPath}/images/?id=${cardFromLocalStorage.id}`, {
+        /*fetch(`${requestPath}/images/?id=${cardFromLocalStorage.id}`, {
             method: 'GET',
         }).then((response) => {
             if (!response.ok) {
@@ -101,7 +115,7 @@ function CardView() {
 
             fetchPrices(cardFromLocalStorage.id);
             fetchLegalities(cardFromLocalStorage.id);
-        });
+        });*/
     }
 
     const fetchPrices = async (id: number) => {
