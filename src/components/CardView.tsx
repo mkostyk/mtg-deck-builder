@@ -61,7 +61,6 @@ function CardView() {
 
     //todo - można wyeksportować do jakichś utilsów
     const stringManaToArray = (manaString: []) => {
-        console.log(manaString)
         let res = {cost: "", mana: []};
         for (let i = 0; i < manaString.length; ++i) {
             if (manaString[i] !== '{' && manaString[i] !== '}') {
@@ -73,17 +72,13 @@ function CardView() {
                 }
             }
         }
-        console.log(res)
         return res;
     }
 
     const fetchCardData = async () => {
         const cardFromLocalStorage = JSON.parse(localStorage.getItem("card") || "null")[0];
-        console.log(cardFromLocalStorage);
         setCard(cardFromLocalStorage);
-        console.log("xddd")
         setManaString(stringManaToArray(cardFromLocalStorage.mana_cost))
-        console.log("xd")
 
         const cardRequest = await fetch(`${requestPath}/images/?id=${cardFromLocalStorage.id}`, {
             method: 'GET',
@@ -100,22 +95,6 @@ function CardView() {
         fetchPrices(cardFromLocalStorage.id);
         fetchLegalities(cardFromLocalStorage.id);
         
-        // TODO - poprawić
-        /*fetch(`${requestPath}/images/?id=${cardFromLocalStorage.id}`, {
-            method: 'GET',
-        }).then((response) => {
-            if (!response.ok) {
-                console.log("Error") // TODO
-                return;
-            }
-
-            response.json().then((data) => {
-                setImage(data.normal);
-            });
-
-            fetchPrices(cardFromLocalStorage.id);
-            fetchLegalities(cardFromLocalStorage.id);
-        });*/
     }
 
     const fetchPrices = async (id: number) => {
@@ -124,27 +103,20 @@ function CardView() {
         });
 
         if(!prices.ok) {
-            console.log("Ceny skopane");
             return;
         }
 
         const numberOrNull = (value: any) => {
-            console.log(value);
             return value == null ? "-" : value; 
         }
 
         const pricesJson = (await prices.json())[0];
 
-        console.log(pricesJson);
-
         const pricesTable = [createPricesData("Non-foil", numberOrNull(pricesJson.eur),  numberOrNull(pricesJson.usd), numberOrNull(pricesJson.tix)),
         createPricesData("Foil", numberOrNull(pricesJson.eur_foil),  numberOrNull(pricesJson.usd_foil), numberOrNull(null))];
-        
-        console.log(pricesTable);
 
         setCosts(pricesTable);
 
-        console.log("Ceny wrzucone");
     }
 
     const fetchLegalities = async (id: number) => {
@@ -174,7 +146,6 @@ function CardView() {
     }
 
     useEffect(() => {
-        console.log("gowno")
         fetchCardData();
     }, []);
     
@@ -262,7 +233,7 @@ function CardView() {
                             Mana cost
                         </Grid>
                         <Grid item xs = {12 - left} sx = {classes.rightGridItem}>
-                        {!manaObj ? "gowno" :
+                        {!manaObj ? "" :
                         (manaObj.cost === '')
                             ? ''
                             : <img
@@ -270,7 +241,7 @@ function CardView() {
                                 src = {require(`../icons/${manaObj.cost}.png`)} style = {{width: 24, margin: 2}}
                                 />
                         }
-                        {!manaObj ? "gowno" :
+                        {!manaObj ? "" :
                         manaObj.mana.map((manaElem: any, key: any) => (
                             <img
                                 key = {key}

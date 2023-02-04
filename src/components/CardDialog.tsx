@@ -16,32 +16,28 @@ const CardDialog = (props: DialogInterface) => {
     const navigate = useNavigate();
 
     const getCardInfo = async () => {
-        console.log(props.card)
         const cardLikeId = await fetch(`${requestPath}/cards/?id=${props.card}`, {
-            method: 'GET' // TODO - auth header if there is a token in localStorage
+            method: 'GET' 
         });
         const cardLikeIdJson = await cardLikeId.json();
-        console.log(cardLikeIdJson[0]);
         setCardInfo(cardLikeIdJson);
     }
 
     const getCardPrices = async () => {
         const cardPrices = await fetch(`${requestPath}/prices/?id=${props.card}`, {
-            method: 'GET' // TODO - auth header if there is a token in localStorage
+            method: 'GET' 
         });
 
         const cardPricesJson = await cardPrices.json();
-        console.log(cardPricesJson[0]);
         setCardPrices({...cardPricesJson[0]});
     }
 
     const getCardImages = async () => {
         const cardImages = await fetch(`${requestPath}/images/?id=${props.card}`, {
-            method: 'GET' // TODO - auth header if there is a token in localStorage
+            method: 'GET' 
         });
 
         const cardImagesJson = await cardImages.json();
-        console.log(cardImagesJson);
         setCardImages({...cardImagesJson});
 
     }

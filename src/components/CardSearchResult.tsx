@@ -22,7 +22,6 @@ export interface Card_t {
 }
 
 const handleClickCard = async (id:number, nav: any) => {
-    console.log(id);
     
     const cardRequest = await fetch(`${requestPath}/cards/?id=${id}`, {
         method: 'GET'
@@ -34,25 +33,9 @@ const handleClickCard = async (id:number, nav: any) => {
 
     const cardJson = await cardRequest.json();
 
-    console.log(cardJson);
     localStorage.setItem("card", JSON.stringify(cardJson));
     nav('/cardView');
 
-
-    /*fetch(`${requestPath}/cards/?id=${id}`, {
-        method: 'GET'
-    }).then((response) => {
-        if (!response.ok) {
-            console.log("Error") // TODO
-            return;
-        }
-
-        response.json().then((data) => {
-            console.log(JSON.stringify(data));
-            localStorage.setItem("card", JSON.stringify(data));
-            nav('/cardView');
-        });
-    });*/
 }
 
 function CardSearchResult() {
@@ -63,7 +46,6 @@ function CardSearchResult() {
 
     const getDecks = async() => {
         const request = localStorage.getItem("request");
-        console.log(request);
 
         const cardsRequest = await fetch(`${requestPath}/cards/${request}&page=${page}`, {
             method: 'GET',
@@ -73,7 +55,6 @@ function CardSearchResult() {
         });
 
         if (!cardsRequest.ok) {
-            console.log("Error") //TODO
             return;
         }
 
@@ -81,18 +62,16 @@ function CardSearchResult() {
 
         const cardData = await Promise.all(cardsJson.map(async (card: any) => {
             const requestImageURL = await fetch(`${requestPath}/images/?id=${card.id}`, {
-                method: 'GET' // TODO - auth header if there is a token in localStorage
+                method: 'GET' 
             })
             let imageURL: any;
             imageURL = null;
 
             if (!requestImageURL.ok) {
-                console.log("Error") // TODO
             } else {
                 imageURL = await requestImageURL.json();
             }
             const cardData = {id: card.id, cardName: card.card_name, manaCost: card.mana_cost, cardtext: card.card_text, typeLine: card.type_line, imageURL: imageURL};
-            console.log(cardData);
             return cardData;
         }))
 
@@ -115,12 +94,10 @@ function CardSearchResult() {
 
     useEffect(()=>{
         getDecks();
-        console.log(localStorage.getItem("token"));
     }, []);
 
     useEffect(()=>{
         getDecks();
-        console.log(localStorage.getItem("token"));
     }, [page]);
 
     const incrementPage = () => {

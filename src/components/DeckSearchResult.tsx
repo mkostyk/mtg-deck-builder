@@ -36,7 +36,7 @@ function DeckSearchResult() {
         }
 
         if (!decksLikeInfix.ok) {
-            console.log("Error") //TODO
+ 
             return;
         }
 

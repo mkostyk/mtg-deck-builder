@@ -40,50 +40,14 @@ export function CardSearch() {
         if(parsedColors != "") {
             request += "&color_identity=" + parseColors();
         }
-        console.log(request);
         return request;
     }
 
-    // TODO - do przeróbki, bo bardziej skomplikowany request
     const handleSearchCards = async () => {
-        //event.preventDefault();
-
-        /*console.log(cardname);
-        console.log(chosenFormat);
-        console.log(chosenTypes);
-        console.log(chosenColors);
-        console.log(chosenSubtype);*/
-
         const request = parseRequest();
-        console.log(request);
 
         localStorage.setItem("request", request);
 
-        /*const cardsLikeInfix = await fetch(`${requestPath}/cards/${request}`, {
-            method: 'GET' // TODO - auth header if there is a token in localStorage
-        });
-
-        if(!cardsLikeInfix.ok) {
-            console.log("Error tutaj") // TODO
-            return;
-        }
-        const cardsLikeInfixJson = await cardsLikeInfix.json();
-        
-        const cardData = await Promise.all(cardsLikeInfixJson.map(async (card: any) => {
-            const requestImageURL = await fetch(`${requestPath}/images/?id=${card.id}`, {
-                method: 'GET' // TODO - auth header if there is a token in localStorage
-            })
-            if (!requestImageURL.ok) {
-                console.log("Error") // TODO
-                return;
-            }
-            const imageURL = await requestImageURL.json();
-            const gowno = {id: card.id, cardName: card.card_name, manaCost: card.mana_cost, cardtext: card.card_text, typeLine: card.type_line, imageURL: imageURL};
-            console.log(gowno);
-            return gowno;
-        }))
-        
-        localStorage.setItem("cards", JSON.stringify(cardData));*/
         navigate("../cardSearchResult");
     }
 
@@ -102,7 +66,7 @@ export function CardSearch() {
 
     const colors = ["B", "G", "R", "U", "W"];
 
-    interface typescripttogowno {
+    interface colors {
         [index: string]: boolean,
         "B": boolean,
         "G": boolean,
@@ -111,7 +75,7 @@ export function CardSearch() {
         "W": boolean,
     }
 
-    const [chosenColors, setChosenColors] = useState<typescripttogowno>({
+    const [chosenColors, setChosenColors] = useState<colors>({
         "B": false,
         "G": false,
         "R": false,

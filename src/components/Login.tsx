@@ -29,7 +29,6 @@ function Login() {
         });
 
         if (!loginResponse.ok) {
-            console.log("Error");
             return;
         }
 
@@ -78,7 +77,7 @@ function Login() {
         </Box>
     )
 
-    const theme = createTheme(); // TODO - custom theme
+    const theme = createTheme();
 
     return (
         <ThemeProvider theme={theme}>

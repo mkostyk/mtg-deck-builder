@@ -38,8 +38,6 @@ function PublicDeck (props: Deck_t) {
 
         const authorJson = await authorRequest.json();
 
-        console.log(authorJson);
-
         setAuthor(authorJson.username);
     }
 
@@ -65,7 +63,6 @@ function PublicDeck (props: Deck_t) {
     };
 
     const handleEdit = (event: any) => {
-        console.log("Clicked");
         handleClose(event);
         navigate(`/deckView/${props.id}`);
     };
@@ -88,26 +85,8 @@ function PublicDeck (props: Deck_t) {
         if(!deckRequest.ok) {
             return;
         }
-       
-        console.log("UPDATE METHOD");
 
         props.updateMethod();
-
-        //TODO
-        /*fetch(`${requestPath}/decks/?id=${props.id}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem("token"),
-            }     
-        }).then((response) => {
-            if (!response.ok) {
-                console.log("Error") // TODO
-                return;
-            }
-
-            console.log("Delete"); // TODO
-            props.updateMethod();
-        });*/
     };
 
     const button_id:string = `button-${props.id}`;

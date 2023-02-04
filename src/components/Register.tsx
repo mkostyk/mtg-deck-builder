@@ -35,29 +35,6 @@ function Register() {
         settoken(registerJson.token);
 
         navigate("/dashboard");
-
-        /*fetch(`${requestPath}/auth/register/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: event.target.username.value,
-                password: event.target.password.value
-            })
-        }).then((response) => {
-            if (!response.ok) {
-                console.log("Error") // TODO
-                return;
-            }
-
-            response.json().then((data) => {
-                localStorage.setItem("token", data.token);
-                settoken(data.token);
-
-                navigate("/dashboard");
-            });
-        });*/
     }
 
     const registerForm = (
@@ -90,8 +67,7 @@ function Register() {
         </Box>
     )
     
-    const theme = createTheme(); // TODO - custom theme
-
+    const theme = createTheme();
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />

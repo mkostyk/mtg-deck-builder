@@ -26,19 +26,6 @@ function DeckView(props: Card_t) {
         setImage(imageJson.small);
         setLoaded(true);
 
-        /*fetch(`${requestPath}/images/?id=${id}`, {
-            method: 'GET',
-        }).then((response) => {
-            if (!response.ok) {
-                console.log("Error") // TODO
-                return;
-            }
-
-            response.json().then((data) => {
-                setImage(data.small);
-                setLoaded(true);
-            });
-        });*/
     }
 
     const fetchCard = async (id: number) => {
@@ -54,20 +41,6 @@ function DeckView(props: Card_t) {
 
         setCard({id: cardJson.id, name: cardJson.card_name});
         fetchImage(cardJson.id);
-
-        /*fetch(`${requestPath}/cards/?id=${id}`, {
-            method: 'GET',
-        }).then((response) => {
-            if (!response.ok) {
-                console.log("Error") // TODO
-                return;
-            }
-
-            response.json().then((data) => {
-                setCard({id: data[0].id, name: data[0].card_name});
-                fetchImage(data[0].id);
-            });
-        });*/
     }
 
     const cardHTML = () => {
