@@ -10,6 +10,8 @@ import { Navigate } from "react-router-dom";
 import { Card_t } from "./CardSearchResult";
 import { AnyMxRecord } from "dns";
 import { useTheme } from "@emotion/react";
+import cardSubtypes from "../assets/card_subtypes.json"
+import cardTypes from "../assets/card_types.json"
 
 export function CardSearch() {
     const navigate = useNavigate();
@@ -178,7 +180,7 @@ export function CardSearch() {
                         </Typography>
                         <div style = {{display: "flex"}}>
                             <Autocomplete
-                                options={[{label: "Commander", id: 1}, {label: "Modern", id: 2}]}
+                                options={[{label: "Standard", id: 1}, {label: "Pioneer", id: 2}, {label: "Modern", id: 3}, {label: "Legacy", id: 4}, {label: "Vintage", id: 5}, {label: "Commander", id: 6}]}
                                 renderInput={(params) => <TextField {...params} label = "Search a format"/>}
                                 sx = {{width: "100%"}}
                                 onChange = {(event, newFormat) => {
@@ -198,11 +200,11 @@ export function CardSearch() {
                         </Typography>
                         <div style = {{display: "flex"}}>
                             <Autocomplete
-                                options= {cardTypeOptions.filter(cardTypeOption => !chosenTypes.some(chosenType => cardTypeOption.label === chosenType))}
+                                options= {cardTypes.filter(cardTypeOption => !chosenTypes.some(chosenType => cardTypeOption === chosenType))}
                                 renderInput={(params) => <TextField {...params} label = "Search a format"/>}
                                 onChange = {(event, newInputValue) => {
                                     if (newInputValue) {
-                                        setChosenTypes(prevChosenTypes => [...prevChosenTypes, newInputValue.label])
+                                        setChosenTypes(prevChosenTypes => [...prevChosenTypes, newInputValue])
                                     }
                                 }}
                                 sx = {{width: "100%"}}
@@ -250,12 +252,12 @@ export function CardSearch() {
                         </Typography>
                         <div style = {{display: "flex"}}>
                             <Autocomplete
-                                options={[{label: "Centaur", id: 1}, {label: "Druid", id: 2}]}
+                                options={cardSubtypes}
                                 renderInput={(params) => <TextField {...params} label = "Search a format"/>}
                                 sx = {{width: "100%"}}
                                 onChange = {(event, newSubtype) => {
                                     if (newSubtype) {
-                                        setChosenSubtype(newSubtype.label)
+                                        setChosenSubtype(newSubtype)
                                     }
                                     else {
                                         setChosenSubtype("");
