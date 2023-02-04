@@ -30,19 +30,27 @@ function App() {
     const checkLogin = async() => {
         const token = localStorage.getItem("token");
 
+
+
         const userId = await fetch(`${requestPath}/token/?token=${token}`, {
             method: 'GET'
         })
 
+        let loggedIn: boolean;
+
         if(!userId.ok) {
-            return;
+            setLogin(false);
+            loggedIn = false;
+        } else {
+
+            const userIdJson = await userId.json();
+
+            setLogin(userIdJson.user_id);
+            loggedIn=userIdJson.user_id;
         }
 
-        const userIdJson = await userId.json();
-
-        setLogin(userIdJson.user_id);
-
-        if(userIdJson.user_id) {
+        console.log ("THE FUCK");
+        if(loggedIn) {
             navigate("/userDecks");
         } else {
             navigate("/cardSearch")

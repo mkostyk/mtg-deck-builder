@@ -137,22 +137,20 @@ export function UserDecks() {
 
     if(login) {
     return (<div>
+            {page > 1?
+            <IconButton aria-label="delete" onClick={decrementPage} sx = {{width: 48}}>
+                <NavigateBeforeIcon/>
+            </IconButton> :
+            <div style = {{width: 48}}></div>}
             <Typography variant="h3" sx = {{padding: 6, width: "100%", display: "flex", justifyContent: "center"}}>
                 Your decks
             </Typography>
             <Decklist data={decks} updateMethod={getDecks} mine={true}/>
-            {page > 1?
-            <IconButton aria-label="delete" onClick={decrementPage}>
-                <NavigateBeforeIcon/>
-            </IconButton> :
-            <>
-            </>}
             {nextPage ?
-            <IconButton aria-label="delete" onClick={incrementPage}>
+            <IconButton aria-label="delete" onClick={incrementPage} sx = {{width: 48}}>
                 <NavigateNextIcon />
             </IconButton> :
-            <></>
-            }
+            <div style = {{width: 48}}></div>}
             <Fab color="primary" sx = {{ position: "fixed", right: "min(4rem, 10vw)", bottom: "min(4rem, 10vw)", padding: "2.5rem" }} onClick={handleOpenForm}>
                     <AddIcon fontSize="large"/>
                 </Fab>
