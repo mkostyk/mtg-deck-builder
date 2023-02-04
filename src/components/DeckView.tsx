@@ -359,7 +359,9 @@ function DeckView() {
                 </div>
             </div>
         );} else {
-            return <></>;
+            return <Typography variant="h3" sx = {{padding: 6, width: "100%", display: "flex", justifyContent: "center"}}>
+            Sorry, this deck is unavaible
+        </Typography>;
         }
     }
 

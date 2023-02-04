@@ -20,6 +20,8 @@ function Decklist (props: Decklist_t) {
                         private={deck.private}
                         updateMethod={props.updateMethod}
                         mine={props.mine}
+                        author={deck.author}
+                        last_update={deck.last_update}
                     />
                 </Grid>
             ))}   

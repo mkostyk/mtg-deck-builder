@@ -12,6 +12,8 @@ export interface Deck_t {
     name: string;
     private: boolean;
     updateMethod: any;
+    author: string;
+    last_update: string;
 }
 
 function Deck (props: Deck_t) {

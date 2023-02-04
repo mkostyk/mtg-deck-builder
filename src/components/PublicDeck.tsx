@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 
 import { Grid, IconButton, Typography, Menu, MenuItem, ListItemIcon, ListItemText,
          Paper, Button, Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
-import { MoreVert, Edit, Delete, Public, Lock } from '@mui/icons-material';
+import { MoreVert, Edit, Delete, Public, Lock, AutoFixHighRounded } from '@mui/icons-material';
 
 import { requestPath } from "../utils";
+import { useEffect } from 'react';
 
 export interface Deck_t {
     id: number;
@@ -13,11 +14,34 @@ export interface Deck_t {
     private: boolean;
     updateMethod: any;
     mine: boolean;
+    author: string;
+    last_update: string;
 }
 
 function PublicDeck (props: Deck_t) {
     const [anchorButtonMenu, setAnchorButtonMenu] = useState<null | HTMLElement>(null);
     const [showAlert, setShowAlert] = useState(false);
+    const [author, setAuthor] = useState("");
+
+    useEffect(() =>
+        {fetchAuthor();}, []
+    )
+
+    const fetchAuthor = async () => {
+        const authorRequest = await fetch(`${requestPath}/users/?user_id=${props.author}`, {
+            method: 'GET',
+        })
+
+        if(!authorRequest.ok) {
+            return;
+        }
+
+        const authorJson = await authorRequest.json();
+
+        console.log(authorJson);
+
+        setAuthor(authorJson.username);
+    }
 
     const open = Boolean(anchorButtonMenu);
     const navigate = useNavigate();
@@ -53,6 +77,8 @@ function PublicDeck (props: Deck_t) {
 
     const handleDeleteDeck = () => {
         handleCloseAlert();
+
+        //TODO
         fetch(`${requestPath}/decks/?id=${props.id}`, {
             method: 'DELETE',
             headers: {
@@ -134,7 +160,7 @@ function PublicDeck (props: Deck_t) {
         <Grid container justifyContent='flex-start'>
             <Grid item>
                 <Typography variant="caption" sx={{ margin: '0.5rem', marginLeft: '0.75rem' }}>
-                    Author: TODO
+                    Author: {author}
                 </Typography>
             </Grid>
 
@@ -143,7 +169,7 @@ function PublicDeck (props: Deck_t) {
 
             <Grid item>
                 <Typography variant="caption" sx={{ margin: '0.5rem', marginRight: '0.75rem' }}>
-                    Last updated: TODO
+                    Last updated: {props.last_update.split("T")[0]}
                 </Typography>
             </Grid>
         </Grid>
