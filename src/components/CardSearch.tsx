@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Box, Typography, TextField, Input, CssBaseline, Container, InputAdornment, IconButton, Grid, Autocomplete, Chip, Button, Icon } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -133,6 +133,20 @@ export function CardSearch() {
     const [chosenSubtype, setChosenSubtype] = useState("");
 
     const [cardname, setCardName] = useState("");
+
+    function handleKeyPressed(event: any) {
+        if (event.key === "Enter") {
+            handleSearchCards();
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyPressed)
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyPressed);
+        }
+    }, [])
 
     function searchField() {
         return (

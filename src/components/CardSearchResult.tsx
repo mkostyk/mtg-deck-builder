@@ -136,13 +136,13 @@ function CardSearchResult() {
             <div>
                 <Typography variant = "h4" sx = {{paddingTop: 6, paddingBottom: 2, width: "100vw", display: "flex", justifyContent: "center"}}>
                 {page > 1 ?
-                <IconButton aria-label="delete" onClick={decrementPage} sx = {{width: 48}}>
+                <IconButton aria-label="delete" onClick={decrementPage} sx = {{width: 48, height: 48, marginTop: -1}}>
                     <NavigateBeforeIcon sx = {{fontSize: 32}}/>
                 </IconButton> :
                 <div style = {{width: 48}}></div>}
                     Search results
                     {nextPage ?
-                    <IconButton aria-label="delete" onClick={incrementPage} sx = {{width: 48}}>
+                    <IconButton aria-label="delete" onClick={incrementPage} sx = {{width: 48, height: 48, marginTop: -1}}>
                         <NavigateNextIcon sx = {{fontSize: 32}}/>
                     </IconButton> :
                     <div style = {{width: 48}}></div>
@@ -158,13 +158,6 @@ function CardSearchResult() {
                         /> : <></>)
                 ))}
                 </div>
-                {page > 1 ?
-                <IconButton aria-label="delete" onClick={decrementPage}>
-                    <NavigateBeforeIcon sx = {{fontSize: 32}}/>
-                </IconButton> :
-                <>
-                </>}
-                
             </div>
         )
     }
