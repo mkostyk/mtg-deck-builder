@@ -83,11 +83,14 @@ function CardSearchResult() {
             const requestImageURL = await fetch(`${requestPath}/images/?id=${card.id}`, {
                 method: 'GET' // TODO - auth header if there is a token in localStorage
             })
+            let imageURL: any;
+            imageURL = null;
+
             if (!requestImageURL.ok) {
                 console.log("Error") // TODO
-                return;
+            } else {
+                imageURL = await requestImageURL.json();
             }
-            const imageURL = await requestImageURL.json();
             const cardData = {id: card.id, cardName: card.card_name, manaCost: card.mana_cost, cardtext: card.card_text, typeLine: card.type_line, imageURL: imageURL};
             console.log(cardData);
             return cardData;
@@ -147,12 +150,13 @@ function CardSearchResult() {
                 </Typography>
                 <div style = {{display: "flex", flexWrap: "wrap", padding: 20, width: "100vw", justifyContent: "center"}}>
                     {cards.map((card: any) => (
+                        (card.imageURL != null? 
                         <img
                             src = {`${card.imageURL.normal}`}
                             style = {{height: 400, padding: 10}}
                             onClick = {() => handleClickCard(card.id, navigate)}
-                        />
-                    ))}
+                        /> : <></>)
+                ))}
                 </div>
                 {page > 1 ?
                 <IconButton aria-label="delete" onClick={decrementPage}>

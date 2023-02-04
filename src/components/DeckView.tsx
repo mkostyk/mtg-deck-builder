@@ -36,6 +36,7 @@ function DeckView() {
     const [isMine, setIsMine] = useState<boolean>(false);
     const [deck, setDeck] = useState<Deck_t>({id:-1, author:-1, name:"", user:"", format:""});
     const [privacy, setPrivacy] = useState<boolean>(false);
+    const [privacySwitch, setPrivacySwitch] = useState(<></>);
     const [format, setFormat] = useState("");
 
     useEffect(() => {
@@ -126,6 +127,9 @@ function DeckView() {
 
         setDeck({id: deckRequestJson.id, author: deckRequestJson.author, name: deckRequestJson.name, user: authorJson.username, format: deckRequestJson.format});
         setPrivacy(deckRequestJson.private);
+        setPrivacySwitch(privacy ?
+            <FormControlLabel control={<Switch defaultChecked onChange={changePrivacy}/>} label="Private" /> :
+            <FormControlLabel control={<Switch onChange={changePrivacy}/>} label="Private" />);
         setFormat(deckRequestJson.format);
         checkIfMine(deckRequestJson.author);
     }
@@ -311,9 +315,7 @@ function DeckView() {
                     {isMine?
                         (
                         <div style = {{padding: 20, paddingLeft: 80}}>    
-                            {privacy ?
-                            <FormControlLabel control={<Switch defaultChecked onChange={changePrivacy}/>} label="Private" /> :
-                            <FormControlLabel control={<Switch onChange={changePrivacy}/>} label="Private" />}
+                            {privacySwitch}
                         </div>
                         ) :
                         <></>
