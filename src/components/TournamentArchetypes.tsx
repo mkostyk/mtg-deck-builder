@@ -143,6 +143,9 @@ function TournamentArchetypes() {
 
     return (
         <div>
+             <Typography variant="h3" sx = {{padding: 6, width: "100%", display: "flex", justifyContent: "center"}}>
+                Tournament archetypes
+            </Typography>
         <Grid container sx={{ alignItems: 'center', padding: 3, paddingTop: 0}} spacing={3} >
             {archetypes.map((deck: Archetype_t) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={deck.id}>

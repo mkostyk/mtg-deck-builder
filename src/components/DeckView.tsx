@@ -23,6 +23,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 export interface Deck_t {
     id: number;
     author: number;
+    name: string;
+    user: string;
 }
 
 function DeckView() {
@@ -31,7 +33,7 @@ function DeckView() {
     const [cardListWithCount, setCardListWithCount] = useState<any[]>([]);
     const { login } = useContext(LoginContext);
     const [isMine, setIsMine] = useState<boolean>(false);
-    const [deck, setDeck] = useState<Deck_t>({id:-1, author:-1});
+    const [deck, setDeck] = useState<Deck_t>({id:-1, author:-1, name:"", user:""});
     const [privacy, setPrivacy] = useState<boolean>(false);
     const [format, setFormat] = useState("");
 
@@ -101,7 +103,7 @@ function DeckView() {
 
         if(!deckRequest.ok){
             console.log("Skucha");
-            setDeck({id: -1, author: -1});
+            setDeck({id: -1, author: -1, name: "", user:""});
             return;
         }
 
@@ -109,7 +111,19 @@ function DeckView() {
 
         console.log(deckRequestJson);
 
-        setDeck({id: deckRequestJson.id, author: deckRequestJson.author});
+        const authorRequest = await fetch(`${requestPath}/users/?user_id=${deckRequestJson.author}`, {
+            method: 'GET',
+        })
+
+        if(!authorRequest.ok) {
+            return;
+        }
+
+        const authorJson = await authorRequest.json();
+
+        console.log(authorJson);
+
+        setDeck({id: deckRequestJson.id, author: deckRequestJson.author, name: deckRequestJson.name, user: authorJson.username});
         setPrivacy(deckRequestJson.private);
         setFormat(deckRequestJson.format);
         checkIfMine(deckRequestJson.author);
@@ -290,6 +304,7 @@ function DeckView() {
                     card = {dialogCard}
                 />
                 <div style = {{display: "flex", flexDirection: "column", justifyItems: "center", alignItems: "center"}}>
+                    <Typography variant="h3" sx = {{padding: 5}}>{deck.name} by {deck.user}</Typography>
                     <Typography variant="h3" sx = {{padding: 5}}>{isMine ? "Edit this deck!" : "Deck View"}</Typography>
                     {/*<Typography variant="h4">Deck id: {id}</Typography>*/}
                 </div>
