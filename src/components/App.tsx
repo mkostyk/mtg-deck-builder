@@ -8,7 +8,6 @@ import NavBar from "./NavBar";
 import { CardSearch } from './CardSearch';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./Login";
-import Dashboard from "./Dashboard";
 import Register from "./Register";
 import DeckSearchResult from "./DeckSearchResult";
 import CardSearchResult from "./CardSearchResult";
@@ -69,7 +68,6 @@ function App() {
                 <Routes>
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
-                    <Route path="dashboard" element={<Dashboard />} />
                     <Route path="deckSearchResult" element={<DeckSearchResult />} />
                     <Route path="deckView/:id" element={<DeckView />} />
                     <Route path="cardSearch" element={<CardSearch />} />

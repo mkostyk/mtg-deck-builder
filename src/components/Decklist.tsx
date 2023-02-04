@@ -1,12 +1,23 @@
-import Deck, { Deck_t } from './Deck';
+
 import { Grid } from '@mui/material';
 import PublicDeck from './PublicDeck';
+
+export interface Deck_t {
+    id: number;
+    name: string;
+    private: boolean;
+    updateMethod: any;
+    author: string;
+    last_update: string;
+}
 
 export interface Decklist_t {
     data: Array<Deck_t>;
     updateMethod: any;
     mine: boolean;
 }
+
+
 
 function Decklist (props: Decklist_t) {
     const deckListHTML = (

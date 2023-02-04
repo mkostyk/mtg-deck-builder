@@ -9,8 +9,6 @@ import { ImageAspectRatio } from "@mui/icons-material";
 import Stack from '@mui/material/Stack';
 import { NumberLiteralType } from "typescript";
 import PublicDeck from "./PublicDeck";
-import { Deck_t } from "./Deck";
-import Deck from "./Deck";
 import Decklist from "./Decklist";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
