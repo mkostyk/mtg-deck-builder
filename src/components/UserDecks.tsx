@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Box, Typography, TextField, Input, CssBaseline, Container, InputAdornment, IconButton, Grid, imageListClasses, Button } from '@mui/material';
+import { Box, Typography, TextField, Dialog, DialogTitle, DialogContent, FormControlLabel, IconButton, Grid, DialogActions, Button, Fab, Checkbox } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { requestPath } from "../utils";
 import NavBar from "./NavBar";
@@ -15,6 +15,8 @@ import Decklist from "./Decklist";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { LoginContext } from './LoginContext';
+import AddIcon from '@mui/icons-material/Add';
+
 
 
 
@@ -23,6 +25,14 @@ export function UserDecks() {
     const [page, setPage] = useState(1);
     const [nextPage, setNextPage] = useState(false);
     const { login } = useContext(LoginContext)
+    const navigate = useNavigate();
+
+    const [showForm, setShowForm] = useState(false);
+    const [privateDeck, setPrivateDeck] = useState(false);
+
+    const handleOpenForm = () => setShowForm(true);
+    const handleCloseForm = () => setShowForm(false);
+    const changePrivacyCheckbox = (event: any) => setPrivateDeck(event.target.checked);
 
     const getDecks = async() => {
         const decksLikeInfix = await fetch(`${requestPath}/decks/?page=${page}&user_id=${-1}`, {
@@ -73,13 +83,64 @@ export function UserDecks() {
         setPage(page - 1);
     }
 
+    const createDeck = (event: any) => {
+        console.log(event);
+        event.preventDefault();
+        handleCloseForm();
+        fetch(`${requestPath}/decks/`, {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem("token"),
+            },
+
+            body: JSON.stringify({ // TODO - testing
+                name: event.target.name.value,
+                private: privateDeck,
+                format: "Standard"
+            })
+        })
+        .then((response) => {
+            if (!response.ok) {
+                console.log("Error") // TODO
+                return;
+            }
+
+            response.json().then((data) => {
+                navigate(`/deckView/${data.id}`);
+            });
+        });
+    }
+
+    const newDeckForm = (
+        <Dialog open={showForm} onClose={handleCloseForm}>
+            <DialogTitle id="create-dialog">
+                Create a new deck
+            </DialogTitle>
+
+            <DialogContent>
+                <form id="create-deck-form" onSubmit={createDeck} >
+                    <TextField id="deck-name-input" name="name" label="Deck name" type="text" fullWidth required sx={{ marginTop: '0.5rem' }} />
+                    <FormControlLabel
+                        control={<Checkbox value="private" color="primary" onChange={changePrivacyCheckbox}/>}
+                        label="Private"
+                    />
+                </form>
+            </DialogContent>
+
+            <DialogActions>
+                <Button variant="contained" color="success" type="submit" form="create-deck-form"> Create </Button>
+                <Button variant="contained" color="error" onClick={handleCloseForm} autoFocus> Cancel </Button>
+            </DialogActions>
+      </Dialog>
+    )
+
 
     if(login) {
     return (<div>
             <Typography variant="h3" sx = {{padding: 6, width: "100%", display: "flex", justifyContent: "center"}}>
                 Your decks
             </Typography>
-            <Decklist data={decks} updateMethod={null} mine={true}/>
+            <Decklist data={decks} updateMethod={getDecks} mine={true}/>
             {page > 1?
             <IconButton aria-label="delete" onClick={decrementPage}>
                 <NavigateBeforeIcon/>
@@ -92,6 +153,11 @@ export function UserDecks() {
             </IconButton> :
             <></>
             }
+            <Fab color="primary" sx = {{ position: "fixed", right: "min(4rem, 10vw)", bottom: "min(4rem, 10vw)", padding: "2.5rem" }} onClick={handleOpenForm}>
+                    <AddIcon fontSize="large"/>
+                </Fab>
+
+            {newDeckForm}
     </div>
     )} else {
         return <Typography variant="h3" sx = {{padding: 6, width: "100%", display: "flex", justifyContent: "center"}}>

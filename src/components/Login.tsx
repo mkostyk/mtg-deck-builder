@@ -38,7 +38,7 @@ function Login() {
         settoken(loginResponseJson.token);
         setLogin(true);
 
-        navigate("/dashboard");
+        navigate("/userDecks");
     }
     
     const loginForm = (

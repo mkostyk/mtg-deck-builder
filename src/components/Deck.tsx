@@ -52,9 +52,23 @@ function Deck (props: Deck_t) {
         handleClose(event);
     };
 
-    const handleDeleteDeck = () => {
+    const handleDeleteDeck = async () => {
         handleCloseAlert();
-        fetch(`${requestPath}/decks/?id=${props.id}`, {
+
+        const deleteRequest = await fetch(`${requestPath}/decks/?id=${props.id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem("token"),
+            }     
+        });
+
+        if (!deleteRequest.ok) {
+            return;
+        }
+
+        props.updateMethod();
+
+        /*fetch(`${requestPath}/decks/?id=${props.id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': 'Token ' + localStorage.getItem("token"),
@@ -67,7 +81,7 @@ function Deck (props: Deck_t) {
 
             console.log("Delete"); // TODO
             props.updateMethod();
-        });
+        });*/
     };
 
     const button_id:string = `button-${props.id}`;

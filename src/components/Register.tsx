@@ -11,9 +11,32 @@ function Register() {
     const [token, settoken] = useState(localStorage.getItem(localStorage.getItem("token") || "null"));
     const navigate = useNavigate();
 
-    const handleRegister = (event: any) => {
+    const handleRegister = async (event: any) => {
         event.preventDefault()
-        fetch(`${requestPath}/auth/register/`, {
+
+        const registerRequest = await fetch(`${requestPath}/auth/register/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: event.target.username.value,
+                password: event.target.password.value
+            })
+        });
+
+        if(!registerRequest.ok) {
+            return;
+        }
+
+        const registerJson = await registerRequest.json();
+
+        localStorage.setItem("token", registerJson.token);
+        settoken(registerJson.token);
+
+        navigate("/dashboard");
+
+        /*fetch(`${requestPath}/auth/register/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -34,7 +57,7 @@ function Register() {
 
                 navigate("/dashboard");
             });
-        });
+        });*/
     }
 
     const registerForm = (
