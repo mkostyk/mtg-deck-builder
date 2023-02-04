@@ -20,9 +20,12 @@ export function DeckSearch() {
     const handleSearchDecks = async (event: any) => {
         event.preventDefault();
 
-        const token = localStorage.getItem("token");
+        //const token = localStorage.getItem("token");
 
-        let decksLikeInfix: any;
+        const request = `?name=${event.target.search.value}&format_name=${format}`;
+        localStorage.setItem("request", request);
+
+        /*let decksLikeInfix: any;
 
         if (token != null) {
 
@@ -46,7 +49,8 @@ export function DeckSearch() {
 
         const decksLikeInfixJson = await decksLikeInfix.json();
 
-        localStorage.setItem("decks", JSON.stringify(decksLikeInfixJson));
+        localStorage.setItem("decks", JSON.stringify(decksLikeInfixJson));*/
+        
         navigate('/deckSearchResult');
     }
 

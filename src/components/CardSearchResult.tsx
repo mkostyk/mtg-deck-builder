@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Box, Typography, TextField, Input, CssBaseline, Container, InputAdornment, IconButton, Grid, imageListClasses, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -8,6 +8,8 @@ import NavBar from "./NavBar";
 import { ImageAspectRatio } from "@mui/icons-material";
 import Stack from '@mui/material/Stack';
 import { NumberLiteralType } from "typescript";
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 
 export interface Card_t {
@@ -40,11 +42,78 @@ function handleClickCard(id:number, nav: any) {
 
 function CardSearchResult() {
     const navigate = useNavigate();
+    const [cards, setCards] = useState<any[]>([]);
+    const [page, setPage] = useState(1);
+    const [nextPage, setNextPage] = useState(false);
+
+    const getDecks = async() => {
+        const request = localStorage.getItem("request");
+        console.log(request);
+
+        const cardsRequest = await fetch(`${requestPath}/cards/${request}&page=${page}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Token ' + localStorage.getItem("token")
+            }
+        });
+
+        if (!cardsRequest.ok) {
+            console.log("Error") //TODO
+            return;
+        }
+
+        const cardsJson = await cardsRequest.json();
+
+        const cardData = await Promise.all(cardsJson.map(async (card: any) => {
+            const requestImageURL = await fetch(`${requestPath}/images/?id=${card.id}`, {
+                method: 'GET' // TODO - auth header if there is a token in localStorage
+            })
+            if (!requestImageURL.ok) {
+                console.log("Error") // TODO
+                return;
+            }
+            const imageURL = await requestImageURL.json();
+            const cardData = {id: card.id, cardName: card.card_name, manaCost: card.mana_cost, cardtext: card.card_text, typeLine: card.type_line, imageURL: imageURL};
+            console.log(cardData);
+            return cardData;
+        }))
+
+        setCards(cardData);
+
+        const checkNextPage = await fetch(`${requestPath}/cards/${request}&page=${page + 1}`, {
+            method: 'GET'
+        });
+
+        if (!checkNextPage.ok) {
+            setNextPage(false);
+            return;
+        }
+
+        const nextPageJson = await checkNextPage.json();
+        
+        setNextPage(nextPageJson.length > 0);
+
+    }
+
+    useEffect(()=>{
+        getDecks();
+        console.log(localStorage.getItem("token"));
+    }, []);
+
+    useEffect(()=>{
+        getDecks();
+        console.log(localStorage.getItem("token"));
+    }, [page]);
+
+    const incrementPage = () => {
+        setPage(page + 1);
+    }
+
+    const decrementPage = () => {
+        setPage(page - 1);
+    }
 
     const searchResultHTML = () => {
-        const cards = JSON.parse(localStorage.getItem("cards") as string);
-        console.log(cards);
-
         return (
             <div>
                 <Typography variant = "h4" sx = {{paddingTop: 6, paddingBottom: 2, width: "100vw", display: "flex", justifyContent: "center"}}>
@@ -59,6 +128,18 @@ function CardSearchResult() {
                         />
                     ))}
                 </div>
+                {page > 1?
+                <IconButton aria-label="delete" onClick={decrementPage}>
+                    <NavigateBeforeIcon/>
+                </IconButton> :
+                <>
+                </>}
+                {nextPage ?
+                <IconButton aria-label="delete" onClick={incrementPage}>
+                    <NavigateNextIcon />
+                </IconButton> :
+                <></>
+                }
             </div>
         )
     }
