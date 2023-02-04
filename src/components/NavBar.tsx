@@ -126,7 +126,6 @@ function ResponsiveAppBar() {
     });
 
     if (!logoutRequest.ok) {
-      console.log("Error") // TODO
       return;
     }
 

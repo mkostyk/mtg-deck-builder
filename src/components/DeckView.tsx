@@ -46,7 +46,7 @@ function DeckView() {
     const handleChangeFormat = async (event: SelectChangeEvent) => {
 
         const newFormat = event.target.value as string
-        console.log(newFormat);
+
 
         const token = localStorage.getItem("token");
         const response = await fetch(`${requestPath}/changeFormat/?deck_id=${deckId}&format_name=${newFormat}`, {
@@ -57,7 +57,6 @@ function DeckView() {
         });
 
         if (!response.ok) {
-            console.log("Error");
             return;
         }
 
@@ -87,8 +86,6 @@ function DeckView() {
     const getDeck = async () => {
         const token = localStorage.getItem("token");
         let deckRequest: any;
-        
-        console.log(token);
 
         if(token != null) {
             deckRequest = await fetch(`${requestPath}/decks/?id=${deckId}`, {
@@ -104,14 +101,11 @@ function DeckView() {
         }
 
         if(!deckRequest.ok){
-            console.log("Skucha");
             setDeck({id: -1, author: -1, name: "", user:"", format:""});
             return;
         }
 
         const deckRequestJson = (await deckRequest.json())[0];
-
-        console.log(deckRequestJson);
 
         const authorRequest = await fetch(`${requestPath}/users/?user_id=${deckRequestJson.author}`, {
             method: 'GET',
@@ -122,8 +116,6 @@ function DeckView() {
         }
 
         const authorJson = await authorRequest.json();
-
-        console.log(authorJson);
 
         setDeck({id: deckRequestJson.id, author: deckRequestJson.author, name: deckRequestJson.name, user: authorJson.username, format: deckRequestJson.format});
         setPrivacy(deckRequestJson.private);
@@ -145,9 +137,6 @@ function DeckView() {
 
         const myIdJson = await myId.json();
 
-        console.log(myIdJson.user_id);
-        console.log(author);
-
         setIsMine(myIdJson.user_id == author);
     }
 
@@ -161,7 +150,6 @@ function DeckView() {
         });
 
         if (!response.ok) {
-            console.log("Error");
             return;
         }
 
@@ -175,8 +163,6 @@ function DeckView() {
     const getCardList = async () => {
         const token = localStorage.getItem("token");
         let response: any;
-        
-        console.log(token);
 
         if(token != null) {
             response = await fetch(`${requestPath}/cardsInDeck/?deck_id=${deckId}`, {
@@ -192,34 +178,26 @@ function DeckView() {
         }
 
         if (!response.ok) {
-            // TODO - wrong token
-            console.log("Error") // TODO
             return;
         }
 
         const responseJson = await response.json();
-        console.log(responseJson)
         
         const cardDataFull : any[] = await Promise.all(responseJson.map(async (card: any) => {
-            console.log(card);
             const cardLikeId = await fetch(`${requestPath}/cards/?id=${card.card_id}`, {
-                method: 'GET' // TODO - auth header if there is a token in localStorage
+                method: 'GET'
             });
             const cardLikeIdJson = await cardLikeId.json();
-            console.log(cardLikeIdJson);
             const obj = {...cardLikeIdJson[0], deleteId: card.id};
-            console.log(obj)
             return obj;
         }))
 
-        console.log(cardDataFull);
         setCardList(cardDataFull);
 
         compressWithCount(cardDataFull)
     }
 
     const stringManaToArray = (manaString: []) => {
-        console.log(manaString)
         let res = {cost: "", mana: []};
         for (let i = 0; i < manaString.length; ++i) {
             if (manaString[i] !== '{' && manaString[i] !== '}') {
@@ -237,12 +215,9 @@ function DeckView() {
 
     const compressWithCount = (cards: any) => {
         const cardListIds = cards.map((card: any) => (card.id));
-        console.log(cardListIds)
         const cardListIdsNoDuplicates = cardListIds.filter((cardId: any, index: any) => {
             return cardListIds.indexOf(cardId) === index
         });
-
-        console.log(cardListIdsNoDuplicates)
 
         const cardListWithCount = cardListIdsNoDuplicates.map((cardId: any) => (
             {
@@ -251,7 +226,6 @@ function DeckView() {
             }
         ))
 
-        console.log(cardListWithCount)
         setCardListWithCount(cardListWithCount)
     }
 
@@ -266,10 +240,8 @@ function DeckView() {
     const [autocompleteInputValue, setAutocompleteInputValue] = useState("");
 
     const handleAutocompleteValueChange = async (newValue: any) => {
-        console.log(newValue)
 
         if (newValue) {
-            console.log("hej")
             const res = await fetch(`${requestPath}/cardsInDeck/`, {
                 method: 'POST',
                 headers: {
@@ -282,13 +254,11 @@ function DeckView() {
                 })
             })
 
-            console.log(await res.json())
             getCardList();
         }
     }
 
     const handleDeleteCard = async (card: any) => {
-        console.log(card)
         await fetch(`${requestPath}/cardsInDeck/?id=${card.deleteId}`, {
             method: 'DELETE',
             headers: {

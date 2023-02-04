@@ -41,7 +41,6 @@ export function UserDecks() {
         });
 
         if (!decksLikeInfix.ok) {
-            console.log("Error") //TODO
             setDecks([]);
             return;
         }
@@ -70,7 +69,6 @@ export function UserDecks() {
 
     useEffect(()=>{
         getDecks();
-        console.log(localStorage.getItem("token"));
     }, [page, login]);
 
     const incrementPage = () => {
@@ -82,7 +80,6 @@ export function UserDecks() {
     }
 
     const createDeck = (event: any) => {
-        console.log(event);
         event.preventDefault();
         handleCloseForm();
         fetch(`${requestPath}/decks/`, {
@@ -91,7 +88,7 @@ export function UserDecks() {
                 'Authorization': 'Token ' + localStorage.getItem("token"),
             },
 
-            body: JSON.stringify({ // TODO - testing
+            body: JSON.stringify({
                 name: event.target.name.value,
                 private: privateDeck,
                 format: "Standard"
@@ -99,7 +96,6 @@ export function UserDecks() {
         })
         .then((response) => {
             if (!response.ok) {
-                console.log("Error") // TODO
                 return;
             }
 

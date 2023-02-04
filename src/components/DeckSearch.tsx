@@ -20,42 +20,13 @@ export function DeckSearch() {
     const handleSearchDecks = async (event: any) => {
         event.preventDefault();
 
-        //const token = localStorage.getItem("token");
-
         const request = `?name=${event.target.search.value}&format_name=${format}`;
         localStorage.setItem("request", request);
-
-        /*let decksLikeInfix: any;
-
-        if (token != null) {
-
-            decksLikeInfix = await fetch(`${requestPath}/decks/?page=1&name=${event.target.search.value}&format_name=${format}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Token ' + localStorage.getItem("token")
-                }
-            });
-
-        } else {
-            decksLikeInfix = await fetch(`${requestPath}/decks/?name=${event.target.search.value}`, {
-                method: 'GET'
-            });
-        }
-
-        if (!decksLikeInfix.ok) {
-            console.log("Error") //TODO
-            return;
-        }
-
-        const decksLikeInfixJson = await decksLikeInfix.json();
-
-        localStorage.setItem("decks", JSON.stringify(decksLikeInfixJson));*/
         
         navigate('/deckSearchResult');
     }
 
     const handleChange = (event: SelectChangeEvent) => {
-        console.log(event.target.value as string);
       setFormat(event.target.value as string);
     };
 

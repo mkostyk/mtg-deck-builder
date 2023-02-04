@@ -23,7 +23,7 @@ import { useState, useEffect } from "react";
 function App() {
     const navigate = useNavigate();
 
-    const theme = createTheme(); // TODO - custom theme
+    const theme = createTheme();
     const [login, setLogin] = useState(false);
 
     const checkLogin = async() => {
@@ -48,7 +48,6 @@ function App() {
             loggedIn=userIdJson.user_id;
         }
 
-        console.log ("THE FUCK");
         if(loggedIn) {
             navigate("/userDecks");
         } else {
