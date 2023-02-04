@@ -46,13 +46,22 @@ function CardSearchResult() {
 
     const getDecks = async() => {
         const request = localStorage.getItem("request");
+        const token = localStorage.getItem("token");
 
-        const cardsRequest = await fetch(`${requestPath}/cards/${request}&page=${page}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Token ' + localStorage.getItem("token")
-            }
-        });
+        let cardsRequest: any;
+
+        if(token != null){
+            cardsRequest = await fetch(`${requestPath}/cards/${request}&page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + token
+                }
+            });
+        } else {
+            cardsRequest = await fetch(`${requestPath}/cards/${request}&page=${page}`, {
+                method: 'GET'
+            });
+        }
 
         if (!cardsRequest.ok) {
             return;
