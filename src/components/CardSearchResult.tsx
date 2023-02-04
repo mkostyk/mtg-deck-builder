@@ -32,9 +32,9 @@ const handleClickCard = async (id:number, nav: any) => {
         return;
     }
 
-    const cardJson = cardRequest.json();
+    const cardJson = await cardRequest.json();
 
-    console.log(JSON.stringify(cardJson));
+    console.log(cardJson);
     localStorage.setItem("card", JSON.stringify(cardJson));
     nav('/cardView');
 
@@ -132,7 +132,18 @@ function CardSearchResult() {
         return (
             <div>
                 <Typography variant = "h4" sx = {{paddingTop: 6, paddingBottom: 2, width: "100vw", display: "flex", justifyContent: "center"}}>
+                {page > 1 ?
+                <IconButton aria-label="delete" onClick={decrementPage} sx = {{width: 48}}>
+                    <NavigateBeforeIcon sx = {{fontSize: 32}}/>
+                </IconButton> :
+                <div style = {{width: 48}}></div>}
                     Search results
+                    {nextPage ?
+                    <IconButton aria-label="delete" onClick={incrementPage} sx = {{width: 48}}>
+                        <NavigateNextIcon sx = {{fontSize: 32}}/>
+                    </IconButton> :
+                    <div style = {{width: 48}}></div>
+                    }
                 </Typography>
                 <div style = {{display: "flex", flexWrap: "wrap", padding: 20, width: "100vw", justifyContent: "center"}}>
                     {cards.map((card: any) => (
@@ -143,18 +154,13 @@ function CardSearchResult() {
                         />
                     ))}
                 </div>
-                {page > 1?
+                {page > 1 ?
                 <IconButton aria-label="delete" onClick={decrementPage}>
-                    <NavigateBeforeIcon/>
+                    <NavigateBeforeIcon sx = {{fontSize: 32}}/>
                 </IconButton> :
                 <>
                 </>}
-                {nextPage ?
-                <IconButton aria-label="delete" onClick={incrementPage}>
-                    <NavigateNextIcon />
-                </IconButton> :
-                <></>
-                }
+                
             </div>
         )
     }

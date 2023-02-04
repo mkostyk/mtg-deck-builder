@@ -143,9 +143,20 @@ function TournamentArchetypes() {
 
     return (
         <div>
-             <Typography variant="h3" sx = {{padding: 6, width: "100%", display: "flex", justifyContent: "center"}}>
+            {page > 1?
+            <IconButton aria-label="delete" onClick={decrementPage}>
+                <NavigateBeforeIcon/>
+            </IconButton> :
+            <div style = {{width: 48}}></div>}
+            <Typography variant="h3" sx = {{padding: 6, width: "100%", display: "flex", justifyContent: "center"}}>
                 Tournament archetypes
             </Typography>
+            {nextPage ?
+            <IconButton aria-label="delete" onClick={incrementPage}>
+                <NavigateNextIcon />
+            </IconButton> :
+            <div style = {{width: 48}}></div>
+            }
         <Grid container sx={{ alignItems: 'center', padding: 3, paddingTop: 0}} spacing={3} >
             {archetypes.map((deck: Archetype_t) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={deck.id}>
@@ -160,18 +171,6 @@ function TournamentArchetypes() {
                 </Grid>
             ))}   
         </Grid>
-        {page > 1?
-            <IconButton aria-label="delete" onClick={decrementPage}>
-                <NavigateBeforeIcon/>
-            </IconButton> :
-            <>
-            </>}
-            {nextPage ?
-            <IconButton aria-label="delete" onClick={incrementPage}>
-                <NavigateNextIcon />
-            </IconButton> :
-            <></>
-            }
         </div>
     );
 }

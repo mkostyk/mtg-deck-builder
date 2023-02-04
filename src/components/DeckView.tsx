@@ -25,6 +25,7 @@ export interface Deck_t {
     author: number;
     name: string;
     user: string;
+    format: string;
 }
 
 function DeckView() {
@@ -33,7 +34,7 @@ function DeckView() {
     const [cardListWithCount, setCardListWithCount] = useState<any[]>([]);
     const { login } = useContext(LoginContext);
     const [isMine, setIsMine] = useState<boolean>(false);
-    const [deck, setDeck] = useState<Deck_t>({id:-1, author:-1, name:"", user:""});
+    const [deck, setDeck] = useState<Deck_t>({id:-1, author:-1, name:"", user:"", format:""});
     const [privacy, setPrivacy] = useState<boolean>(false);
     const [format, setFormat] = useState("");
 
@@ -62,7 +63,7 @@ function DeckView() {
         setFormat(newFormat);
     };
 
-    const selectField = (<Box sx={{ minWidth: 120 }}>
+    const selectField = (<Box sx={{ minWidth: 120,  marginLeft: 10, marginRight: 10, marginBottom: 5 }}>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Format</InputLabel>
           <Select
@@ -103,7 +104,7 @@ function DeckView() {
 
         if(!deckRequest.ok){
             console.log("Skucha");
-            setDeck({id: -1, author: -1, name: "", user:""});
+            setDeck({id: -1, author: -1, name: "", user:"", format:""});
             return;
         }
 
@@ -123,7 +124,7 @@ function DeckView() {
 
         console.log(authorJson);
 
-        setDeck({id: deckRequestJson.id, author: deckRequestJson.author, name: deckRequestJson.name, user: authorJson.username});
+        setDeck({id: deckRequestJson.id, author: deckRequestJson.author, name: deckRequestJson.name, user: authorJson.username, format: deckRequestJson.format});
         setPrivacy(deckRequestJson.private);
         setFormat(deckRequestJson.format);
         checkIfMine(deckRequestJson.author);
@@ -304,19 +305,22 @@ function DeckView() {
                     card = {dialogCard}
                 />
                 <div style = {{display: "flex", flexDirection: "column", justifyItems: "center", alignItems: "center"}}>
-                    <Typography variant="h3" sx = {{padding: 5}}>{deck.name} by {deck.user}</Typography>
-                    <Typography variant="h3" sx = {{padding: 5}}>{isMine ? "Edit this deck!" : "Deck View"}</Typography>
-                    {/*<Typography variant="h4">Deck id: {id}</Typography>*/}
+                    <Typography variant="h3" sx = {{padding: 5, paddingBottom: 0}}>{isMine ? "Edit this deck!" : "Deck View"}</Typography>
+                    <Typography variant="h5" sx = {{padding: 2}}>{deck.name} by {deck.user}</Typography>
                 </div>
                     {isMine?
-                        (privacy ?
-                        <FormControlLabel control={<Switch defaultChecked onChange={changePrivacy}/>} label="Private" /> :
-                        <FormControlLabel control={<Switch onChange={changePrivacy}/>} label="Private" />) :
+                        (
+                        <div style = {{padding: 20, paddingLeft: 80}}>    
+                            {privacy ?
+                            <FormControlLabel control={<Switch defaultChecked onChange={changePrivacy}/>} label="Private" /> :
+                            <FormControlLabel control={<Switch onChange={changePrivacy}/>} label="Private" />}
+                        </div>
+                        ) :
                         <></>
                     }
                     {isMine?
                         selectField :
-                        <></>
+                        <Typography variant="h5" sx = {{padding: 5}}>Format: {deck.format}</Typography>
                     }
                 { isMine ? 
                 <Autocomplete
@@ -333,7 +337,7 @@ function DeckView() {
                 <div style = {{padding: 25}}>
                     {cardListWithCount.map((card, key) => (
                         <Paper
-                            sx = {{padding: 3, margin: 5, borderRadius: 1000, fontSize: 20, backgroundColor: "lightgrey", display: "flex"}}
+                            sx = {{padding: 3, margin: 3, borderRadius: 1000, fontSize: 20, backgroundColor: "lightgrey", display: "flex"}}
                             key = {key}
                         >
                             {isMine ? <IconButton
