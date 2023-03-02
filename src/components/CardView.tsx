@@ -1,12 +1,6 @@
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Box, Typography, TextField, Input, CssBaseline, Container, InputAdornment, IconButton, Grid, imageListClasses } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { Typography, Grid } from '@mui/material';
 import { requestPath } from "../utils";
-import NavBar from "./NavBar";
-import { ImageAspectRatio } from "@mui/icons-material";
-import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -14,7 +8,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { idText } from "typescript";
 
 const classes = {
     leftGridItem: {
@@ -97,6 +90,10 @@ function CardView() {
         
     }
 
+    const numberOrNull = (value: any) => {
+        return value == null ? "-" : value; 
+    }
+
     const fetchPrices = async (id: number) => {
         const prices = await fetch(`${requestPath}/prices/?id=${id}`, {
             method: 'GET',
@@ -104,10 +101,6 @@ function CardView() {
 
         if(!prices.ok) {
             return;
-        }
-
-        const numberOrNull = (value: any) => {
-            return value == null ? "-" : value; 
         }
 
         const pricesJson = (await prices.json())[0];
@@ -260,7 +253,7 @@ function CardView() {
                             Power/toughness
                         </Grid>
                         <Grid item xs = {12 - left} sx = {classes.rightGridItem}>
-                            {(card) ? `${card.power}/${card.toughness}` : "card stats"}
+                            {(card) ? `${numberOrNull(card.power)}/${numberOrNull(card.toughness)}` : "card stats"}
                         </Grid>
                         <Grid item xs = {left} sx = {classes.leftGridItem}>
                             Text

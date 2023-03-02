@@ -1,9 +1,5 @@
+import { Grid, IconButton, Typography, Paper, Button } from '@mui/material';
 
-import PublicDeck from './PublicDeck';
-
-import { Grid, IconButton, Typography, Menu, MenuItem, ListItemIcon, ListItemText,
-    Paper, Button, Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
-import { MoreVert, Edit, Delete, Public, Lock } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -48,7 +44,6 @@ function TournamentArchetypes() {
             }
     
             const deckJson = (await deckRequest.json())[0];
-            console.log(deckJson);
 
             return {id: archetype.id, name: archetype.name, popularity: archetype.popularity, example_deck_id: deckJson.deck_id, format: deckJson.tournament_format};
         }));

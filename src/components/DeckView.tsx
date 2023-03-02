@@ -1,15 +1,12 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { isEmptyBindingElement } from "typescript";
-import Cardlist from "./Cardlist";
-import React, {useEffect, useContext} from "react";
+import { useEffect, useContext } from "react";
 
 import { requestPath } from "../utils";
-import { Typography, Button, Paper, IconButton, Dialog, Autocomplete, TextField } from '@mui/material';
+import { Typography, Button, Paper, IconButton, Autocomplete, TextField } from '@mui/material';
 
 import ClearIcon from '@mui/icons-material/Clear';
 import CardDialog from "./CardDialog";
-import { DialogInterface } from "./CardDialog";
 import cardNames from "../assets/card_names-1.json"
 import { LoginContext } from './LoginContext';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -47,8 +44,6 @@ function DeckView() {
 
         const newFormat = event.target.value as string
 
-
-        const token = localStorage.getItem("token");
         const response = await fetch(`${requestPath}/changeFormat/?deck_id=${deckId}&format_name=${newFormat}`, {
             method: 'POST',
             headers: {
@@ -141,7 +136,6 @@ function DeckView() {
     }
 
     const changePrivacy = async () => {
-        const token = localStorage.getItem("token");
         const response = await fetch(`${requestPath}/changePrivacy/?deck_id=${deckId}`, {
             method: 'POST',
             headers: {
@@ -351,7 +345,7 @@ function DeckView() {
             </div>
         );} else {
             return <Typography variant="h3" sx = {{padding: 6, width: "100%", display: "flex", justifyContent: "center"}}>
-            Sorry, this deck is unavaible
+            Sorry, this deck is unavailable
         </Typography>;
         }
     }
