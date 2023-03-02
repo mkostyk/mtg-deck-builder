@@ -138,7 +138,7 @@ function ResponsiveAppBar() {
               variant="h6"
               noWrap
               component="a"
-              href="/mtg-deck-builder/#/"
+              href="/mtg-deck-builder/"
               sx={{
                 mr: 2,
                 display: "flex",
