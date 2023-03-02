@@ -79,11 +79,6 @@ const pages = new Map<string, Array<MenuOption_t>>();
 pages.set('Cards', [{name: 'Card search', link: '/cardSearch'}]);
 pages.set('Decks', [{name: 'Deck search', link: '/deckSearch'}, {name: 'My decks', link: '/userDecks'}, {name: 'Tournaments Archetypes', link: '/tournamentArchetypes'}]);
 
-//const pages = ['Products', 'Pricing', 'Blog'];
-//const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-//const settingsLogout = ['Login'];
-//const options = [['New products', 'Deals', 'All products'], ['Kończą mi się pomysły'], ['No hej', 'elo']];
-
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -143,7 +138,7 @@ function ResponsiveAppBar() {
               variant="h6"
               noWrap
               component="a"
-              href="/"
+              href="/mtg-deck-builder/#/"
               sx={{
                 mr: 2,
                 display: "flex",
