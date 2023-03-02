@@ -1,7 +1,7 @@
 {
   "name": "mtg-deck-builder",
   "version": "0.1.0",
-  "homepage": "https://mkostyk.github.io/mtg-deck-builder",
+  "homepage": "https://mkostyk.github.io/mtg-deck-builder/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.5",

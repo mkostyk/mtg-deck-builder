@@ -64,20 +64,18 @@ function App() {
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <NavBar />
-                <BrowserRouter basename="/mtg-deck-builder/">
-                    <Routes>
-                        <Route path="login" element={<Login />} />
-                        <Route path="register" element={<Register />} />
-                        <Route path="deckSearchResult" element={<DeckSearchResult />} />
-                        <Route path="deckView/:id" element={<DeckView />} />
-                        <Route path="cardSearch" element={<CardSearch />} />
-                        <Route path="cardSearchResult" element={<CardSearchResult />} />
-                        <Route path="cardView" element={<CardView />} />
-                        <Route path="deckSearch" element={<DeckSearch />} />
-                        <Route path="userDecks" element={<UserDecks />} />
-                        <Route path="tournamentArchetypes" element={<TournamentArchetypes />} />
-                    </Routes>
-                </BrowserRouter>
+                <Routes>
+                    <Route path="login" element={<Login />} />
+                    <Route path="register" element={<Register />} />
+                    <Route path="deckSearchResult" element={<DeckSearchResult />} />
+                    <Route path="deckView/:id" element={<DeckView />} />
+                    <Route path="cardSearch" element={<CardSearch />} />
+                    <Route path="cardSearchResult" element={<CardSearchResult />} />
+                    <Route path="cardView" element={<CardView />} />
+                    <Route path="deckSearch" element={<DeckSearch />} />
+                    <Route path="userDecks" element={<UserDecks />} />
+                    <Route path="tournamentArchetypes" element={<TournamentArchetypes />} />
+                </Routes>
             </ThemeProvider>
         </LoginContext.Provider>
     );
