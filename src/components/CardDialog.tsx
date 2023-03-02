@@ -65,7 +65,7 @@ const CardDialog = (props: DialogInterface) => {
     </DialogTitle>*/}
             <DialogContent>
                 <div style = {{}}>
-                    <img src={`${cardImages.normal}`} style = {{width: 400}}/>
+                    <img src={`${cardImages.normal}`} style = {{width: 300}}/>
                     
                     <div>
                         <Typography variant = "h6" sx = {{display: "flex", justifyContent: "center", padding: 2}}>

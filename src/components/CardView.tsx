@@ -206,9 +206,11 @@ function CardView() {
 
     return (
         <div style = {{padding: 20, display: "flex"}}>
-            <img src = {image} alt = "card image"/>
+            <div style = {{minWidth: "25%", maxWidth: "25%"}}>
+                <img src = {image} style={{ width: "100%", height: "80%"}} alt = "card image"/>
+            </div>
             <div>
-                <div style = {{paddingLeft: 40, width: "100%"}}>
+                <div style = {{paddingLeft: 40, minWidth: "75%", paddingRight: 40}}>
                     <Typography
                         variant = "h4"
                         sx = {{padding: 4, paddingLeft: 0, width: "100%", display: "flex", /*justifyContent: "center"*/}}
@@ -269,11 +271,11 @@ function CardView() {
                         </Grid>
                     </Grid>
                 </div>
-                <div style = {{display: "flex"}}>
-                    <div style = {{width: "100%",  margin: 40}}>
+                <div style = {{display: "flex", minWidth:"75%"}}>
+                    <div style = {{margin: 40, marginTop: 10}}>
                         {CostsTable()}
                     </div>
-                    <div style = {{width: "100%",  margin: 40, paddingRight: 300}}>
+                    <div style = {{margin: 40, marginTop: 10, paddingRight: 40}}>
                         {LegalityTable()}
                     </div>
                 </div>
