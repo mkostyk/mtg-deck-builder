@@ -145,7 +145,7 @@ function CardView() {
     function CostsTable() {
     return (
         <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 350 }} size="small" aria-label="a dense table">
+        <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
             <TableHead>
             <TableRow>
                 <TableCell ><Typography fontWeight={600}>Prices</Typography></TableCell>

@@ -19,11 +19,11 @@ export function CardSearch() {
     const parseColors = () => {
         let result: string;
         result = "";
-        result += chosenColors.B ? "B" : "";
-        result += chosenColors.G ? "G" : "";
-        result += chosenColors.R ? "R" : "";
-        result += chosenColors.U ? "U" : "";
-        result += chosenColors.W ? "W" : "";
+        result += chosenColors.B ? "B," : "";
+        result += chosenColors.G ? "G," : "";
+        result += chosenColors.R ? "R," : "";
+        result += chosenColors.U ? "U," : "";
+        result += chosenColors.W ? "W," : "";
         return result;
     }
 
