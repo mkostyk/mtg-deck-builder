@@ -145,7 +145,7 @@ function CardView() {
     function CostsTable() {
     return (
         <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+        <Table sx={{ minWidth: 350 }} size="small" aria-label="a dense table">
             <TableHead>
             <TableRow>
                 <TableCell ><Typography fontWeight={600}>Prices</Typography></TableCell>
@@ -210,7 +210,7 @@ function CardView() {
                 <img src = {image} crossOrigin = "anonymous" style={{ width: "100%" }} alt = "card image"/>
             </div>
             <div>
-                <div style = {{paddingLeft: 40, minWidth: "75%", paddingRight: 40}}>
+                <div style = {{paddingLeft: 40, minWidth: "75%", maxWidth: "100%", paddingRight: 40}}>
                     <Typography
                         variant = "h4"
                         sx = {{padding: 4, paddingLeft: 0, width: "100%", display: "flex", /*justifyContent: "center"*/}}
@@ -271,7 +271,7 @@ function CardView() {
                         </Grid>
                     </Grid>
                 </div>
-                <div style = {{display: "flex", minWidth:"75%"}}>
+                <div style = {{display: "flex", minWidth:"75%", maxWidth:"75%"}}>
                     <div style = {{margin: 40, marginTop: 10}}>
                         {CostsTable()}
                     </div>
