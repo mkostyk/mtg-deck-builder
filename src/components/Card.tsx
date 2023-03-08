@@ -51,7 +51,7 @@ function DeckView(props: Card_t) {
         } else {
             return (
                 <Paper variant="outlined">
-                    <img src={image} />
+                    <img src={image} crossOrigin="anonymous"/>
                 </Paper>)
         }
     }

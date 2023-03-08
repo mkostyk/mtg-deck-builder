@@ -139,6 +139,7 @@ function CardSearchResult() {
                         (card.imageURL != null? 
                         <img
                             src = {`${card.imageURL.normal}`}
+                            crossOrigin = "anonymous"
                             style = {{height: 400, padding: 10}}
                             onClick = {() => handleClickCard(card.id, navigate)}
                         /> : <></>)

@@ -207,7 +207,7 @@ function CardView() {
     return (
         <div style = {{padding: 20, display: "flex"}}>
             <div style = {{minWidth: "25%", maxWidth: "25%"}}>
-                <img src = {image} style={{ width: "100%", height: "80%"}} alt = "card image"/>
+                <img src = {image} crossOrigin = "anonymous" style={{ width: "100%" }} alt = "card image"/>
             </div>
             <div>
                 <div style = {{paddingLeft: 40, minWidth: "75%", paddingRight: 40}}>
